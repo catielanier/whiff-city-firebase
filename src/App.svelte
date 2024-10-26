@@ -1,7 +1,6 @@
 <script lang="ts">
   import {onMount} from "svelte";
   import {Router, Route} from "svelte-routing";
-  import Home from "./routes/Home.svelte";
   import Update from "./routes/Update.svelte";
   import Login from "./routes/Login.svelte";
   import Scoreboard from "./routes/Scoreboard.svelte";
@@ -24,8 +23,7 @@
 <Router {url}>
   <main>
     {#if loggedIn}
-      <Route path="/" component={Home} />
-      <Route path="/update" component={Update} />
+      <Route path="/" component={Update} />
     {:else}
       <Route path="/"><Login {setLogin} /></Route>
     {/if}
