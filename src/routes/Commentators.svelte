@@ -1,28 +1,18 @@
 <script lang="ts">
-    import {onDestroy, onMount} from "svelte";
-    import {io, type Socket} from "socket.io-client";
-    import {retrieveCommentators} from "../utils/api";
+    import {onMount} from "svelte";
+    import {getDatabase, ref, onValue} from 'firebase/database';
+    import {firebase} from "../utils/firebase";
     import type {Commentator} from "../utils/types";
 
     let commentators: Commentator[];
-    let socket: Socket | null;
 
     onMount(async () => {
-        commentators = await retrieveCommentators();
-
-        socket = io();
-        socket?.on('connect', () => {
-            console.log('connection established')
+        const database = getDatabase(firebase);
+        const commentatorReference = ref(database, '/commentators')
+        onValue(commentatorReference, res => {
+            commentators = res.val();
         })
-        socket?.on('scoreboard_updated', async () => {
-            commentators = await retrieveCommentators();
-        })
-    })
-
-    onDestroy(() => {
-        socket?.disconnect()
-        console.log('connection closed')
-    })
+    });
 </script>
 
 <div class="commentators">

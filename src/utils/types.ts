@@ -12,36 +12,18 @@ export interface Commentator {
     teamName: string;
 }
 
-export interface SnakeCommentator {
-    id: number;
-    commentator_name: string;
-    x_handle: string;
-    team_name: string;
-}
-
-export interface SnakePlayer {
-    id: number;
-    player_name: string;
-    team_name: string;
-    score: number;
-}
-
-export interface ScoreboardResponse {
-    player_scores: SnakePlayer[];
-    status: number;
-}
-
-export interface CommentatorResponse {
-    commentator_info: SnakeCommentator[];
-    status: number;
-}
-
 export interface UpdateData {
-    playerScores: Player[];
-    commentatorInfo: Commentator[];
+    players: Player[];
+    commentators: Commentator[];
 }
 
-export interface UpdateDataSnaked {
-    player_scores: SnakePlayer[];
-    commentator_info: SnakeCommentator[];
+export interface FirebaseConfig {
+    apiKey: string;
+    authDomain: string;
+    databaseURL: string;
+    projectId: string;
+    storageBucket: string;
+    messagingSenderId: string;
+    appId: string;
+    measurementId: string;
 }

@@ -1,23 +1,19 @@
 <script lang="ts">
     import axios from "axios";
     import {setToken} from "../utils/tokenService";
+    import {getAuth, signInWithEmailAndPassword, type UserCredential} from 'firebase/auth'
+    import {firebase} from '../utils/firebase';
     export let setLogin: () => void;
     let email: string = '';
     let password: string = '';
-    let error: string | null;
 
     const submitLogin = async (e: Event): Promise<void> => {
         e.preventDefault();
-        const res = await axios.post('/api/users/login', {
-            email,
-            password
-        });
-        if (res.data.status === 201) {
-            setToken(res.data.token);
+        const auth = getAuth(firebase);
+        signInWithEmailAndPassword(auth, email, password).then((user: UserCredential) => {
+            setToken(JSON.stringify(user));
             setLogin();
-        } else {
-            error = 'Invalid email or password';
-        }
+        })
     }
 </script>
 

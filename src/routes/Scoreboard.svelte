@@ -1,26 +1,17 @@
 <script lang="ts">
-    import {onDestroy, onMount} from "svelte";
-    import { io, type Socket } from "socket.io-client";
+    import {onMount} from "svelte";
+    import {getDatabase, ref, onValue} from "firebase/database";
     import type { Player } from "../utils/types";
-    import { retrieveScoreboard } from "../utils/api";
+    import {firebase} from "../utils/firebase";
 
     let players: Player[];
-    let socket: Socket | null;
 
-    onMount(async () => {
-        players = await retrieveScoreboard();
-        socket = io();
-        socket?.on('connect', () => {
-            console.log('connection established')
-        })
-        socket?.on('scoreboard_updated', async () => {
-            players = await retrieveScoreboard();
-        })
-    })
-
-    onDestroy(() => {
-        socket?.disconnect()
-        console.log('connection closed')
+    onMount(() => {
+        const database = getDatabase(firebase);
+        const playersRef = ref(database, '/players');
+        onValue(playersRef, res => {
+            players = res.val();
+        });
     })
 </script>
 

@@ -1,9 +1,9 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import {objectToSnake} from "ts-case-convert";
     import axios from "axios";
-    import type {Commentator, Player, UpdateDataSnaked, UpdateData} from "../utils/types";
-    import {retrieveCommentators, retrieveScoreboard} from "../utils/api";
+    import type {Commentator, Player, UpdateData} from "../utils/types";
+    import {getDatabase, ref, get, update} from "firebase/database";
+    import {firebase} from "../utils/firebase";
 
     let players: Player[]
     let commentators: Commentator[]
@@ -14,15 +14,17 @@
     const updateScoreboard = async (): Promise<void> => {
         isLoading = true;
         const updateInfo: UpdateData = {
-            playerScores: players,
-            commentatorInfo: commentators
+            players,
+            commentators
         }
-        const apiUpdateInfo: UpdateDataSnaked = objectToSnake(updateInfo);
-        const res = await axios.put('/api/scoreboard', apiUpdateInfo);
-        if (res?.data.status !== 201) {
-            errMsg = "Unable to update, try again.";
-        }
-        isLoading = false;
+        const db = getDatabase(firebase);
+        const reference = ref(db);
+        update(reference, updateInfo).then(_ => {
+            isLoading = false;
+        }).catch(_ => {
+            errMsg = 'Error updating info. Try again.';
+            isLoading = false;
+        })
     }
 
     const clearScores = (e: Event): void => {
@@ -56,8 +58,15 @@
     }
 
     onMount(async () => {
-        players = await retrieveScoreboard();
-        commentators = await retrieveCommentators();
+        const database = getDatabase(firebase);
+        const playersRef = ref(database, '/players');
+        const commentatorsRef = ref(database, '/commentators');
+        get(playersRef).then(res => {
+            players = res.val();
+        })
+        get(commentatorsRef).then(res => {
+            commentators = res.val();
+        })
     });
 </script>
 
