@@ -1,0 +1,10 @@
+{
+  "alias": "whiff-city-scoreboard",
+  "name": "whiff-city-scoreboard",
+  "routes": [
+    {
+      "src": "/",
+      "dest": "index.html"
+    }
+  ]
+}
