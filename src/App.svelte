@@ -27,7 +27,7 @@
     {:else}
       <Route path="/"><Login {setLogin} /></Route>
     {/if}
-    <Route path="/scoreboard" component={Scoreboard} />
-    <Route path="/commentators" component={Commentators} />
+    <Route exact path="/scoreboard" component={Scoreboard} />
+    <Route exact path="/commentators" component={Commentators} />
   </main>
 </Router>
