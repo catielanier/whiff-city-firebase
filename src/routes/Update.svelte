@@ -77,6 +77,12 @@
                 e.preventDefault();
                 updateScoreboard();
             }}>
+                <div class="button-grid top">
+                    <button type="submit">Update</button>
+                    <button on:click={clearScores}>Clear Scores</button>
+                    <button on:click={swapSides}>Swap Player Sides</button>
+                    <button on:click={swapCommentatorSides}>Swap Commentator Sides</button>
+                </div>
                 <div class="player-info">
                     <div class="player-one">
                         <p>Left Player:</p>
@@ -149,11 +155,53 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit">Update</button>
-                <button on:click={clearScores}>Clear Scores</button>
-                <button on:click={swapSides}>Swap Player Sides</button>
-                <button on:click={swapCommentatorSides}>Swap Commentator Sides</button>
+                <div class="button-grid">
+                    <button type="submit">Update</button>
+                    <button on:click={clearScores}>Clear Scores</button>
+                    <button on:click={swapSides}>Swap Player Sides</button>
+                    <button on:click={swapCommentatorSides}>Swap Commentator Sides</button>
+                </div>
             </form>
         </div>
     {/if}
 </div>
+
+<style>
+    .update {
+        text-align: left;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+    .player-one, .commentator-one {
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #FFED97;
+    }
+    .player-two, .commentator-two {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #235BA8;
+    }
+    .player-info {
+        margin-bottom: 20px;
+    }
+    p {
+        margin: 0;
+    }
+    .player-one-wrapper, .player-two-wrapper, .commentator-one-wrapper, .commentator-two-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 20px;
+    }
+    .button-grid {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 15px;
+    }
+    .button-grid.top{
+        margin-bottom: 20px;
+    }
+</style>

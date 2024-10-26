@@ -88,8 +88,6 @@
         background: #FFED97;
         color: #000;
     }
-    .left-player .player-info, .right-player .player-info {
-    }
     .left-player .player-info .team {
         color: #235BA8;
     }
