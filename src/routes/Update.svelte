@@ -2,7 +2,7 @@
     import {onMount} from "svelte";
     import axios from "axios";
     import type {Commentator, Player, UpdateData} from "../utils/types";
-    import {getDatabase, ref, get, update} from "firebase/database";
+    import {getDatabase, ref, onValue, get, update} from "firebase/database";
     import {firebase} from "../utils/firebase";
 
     let players: Player[]
@@ -61,9 +61,9 @@
         const database = getDatabase(firebase);
         const playersRef = ref(database, '/players');
         const commentatorsRef = ref(database, '/commentators');
-        get(playersRef).then(res => {
+        onValue(playersRef, res => {
             players = res.val();
-        })
+        });
         get(commentatorsRef).then(res => {
             commentators = res.val();
         })
