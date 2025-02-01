@@ -16,6 +16,7 @@ export interface Commentator {
 export interface UpdateData {
     players: Player[];
     commentators: Commentator[];
+    gameInfo: GameInfo;
 }
 
 export interface FirebaseConfig {
@@ -27,4 +28,13 @@ export interface FirebaseConfig {
     messagingSenderId: string;
     appId: string;
     measurementId: string;
+}
+
+export interface GameInfo {
+    title: string;
+}
+
+export interface GameData {
+    name: string;
+    data: string;
 }

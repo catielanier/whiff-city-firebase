@@ -1,12 +1,13 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import axios from "axios";
-    import type {Commentator, Player, UpdateData} from "../utils/types";
+    import type {Commentator, Player, UpdateData, GameInfo} from "../utils/types";
     import {getDatabase, ref, onValue, get, update} from "firebase/database";
     import {firebase} from "../utils/firebase";
-
+    import { games } from "../utils/data";
+    
     let players: Player[]
     let commentators: Commentator[]
+    let gameInfo: GameInfo;
 
     let isLoading: boolean = false;
     let errMsg: string | null;
@@ -15,7 +16,8 @@
         isLoading = true;
         const updateInfo: UpdateData = {
             players,
-            commentators
+            commentators,
+            gameInfo
         }
         const db = getDatabase(firebase);
         const reference = ref(db);
@@ -61,17 +63,21 @@
         const database = getDatabase(firebase);
         const playersRef = ref(database, '/players');
         const commentatorsRef = ref(database, '/commentators');
+        const gameRef = ref(database, '/gameInfo');
         onValue(playersRef, res => {
             players = res.val();
         });
         get(commentatorsRef).then(res => {
             commentators = res.val();
-        })
+        });
+        get(gameRef).then(res => {
+            gameInfo = res.val();
+        });
     });
 </script>
 
 <div class="update">
-    {#if players?.length && commentators?.length}
+    {#if players?.length && commentators?.length && gameInfo}
         <div class="wrapper">
             <form on:submit={(e) => {
                 e.preventDefault();
@@ -82,6 +88,14 @@
                     <button on:click={clearScores}>Clear Scores</button>
                     <button on:click={swapSides}>Swap Player Sides</button>
                     <button on:click={swapCommentatorSides}>Swap Commentator Sides</button>
+                </div>
+                <div class="game-info">
+                    <p>Game:</p>
+                    <select bind:value={gameInfo.title}>
+                        {#each games as game}
+                            <option value={game.data}>{game.name}</option>
+                        {/each}
+                    </select>
                 </div>
                 <div class="player-info">
                     <div class="player-one">
@@ -221,6 +235,9 @@
         grid-gap: 15px;
     }
     .button-grid.top{
+        margin-bottom: 20px;
+    }
+    select {
         margin-bottom: 20px;
     }
 </style>

@@ -5,10 +5,15 @@
     import {firebase} from "../utils/firebase";
 
     let players: Player[];
+    let gameInfo: GameInfo;
 
     onMount(() => {
         const database = getDatabase(firebase);
         const playersRef = ref(database, '/players');
+        const gameRef = ref(database, '/gameInfo');
+        onValue(gameRef, res => {
+            gameInfo = res.val();
+        })
         onValue(playersRef, res => {
             players = res.val();
         });
@@ -16,13 +21,13 @@
 </script>
 
 <div class="scoreboard">
-    {#if players?.length}
+    {#if players?.length && gameInfo}
         <div class="wrapper">
-            <div class="left-player">
+            <div class="left-player {gameInfo.title}">
                 <div class="score"><span class="score-inner">{players[0].score}</span></div>
                 <div class="player-info"><span class="player"><span class="team">{players[0].teamName}</span> {players[0].playerName}</span></div>
             </div>
-            <div class="right-player">
+            <div class="right-player {gameInfo.title}">
                 <div class="player-info"><span class="player"><span class="team">{players[1].teamName}</span> {players[1].playerName}</span></div>
                 <div class="score"><span class="score-inner">{players[1].score}</span></div>
             </div>
@@ -58,10 +63,16 @@
         transform: skewX(30deg);
         margin-right: 25px;
     }
+    .left-player.sf6 .player-info {
+        margin-right: 250px;
+    }
     .right-player {
         grid-template-columns: 6fr 1fr;
         transform: skewX(-30deg);
         margin-left: 27px;
+    }
+    .right-player.sf6 .player-info {
+        margin-left: 250px;
     }
     .player-info .player, .score-inner {
         display: block;
@@ -97,5 +108,8 @@
     }
     .right-player .team {
         color: #FFED97;
+    }
+    .losers-bracket {
+        background: #EB0405;
     }
 </style>
