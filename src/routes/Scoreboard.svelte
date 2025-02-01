@@ -137,7 +137,7 @@
         color: #FFED97;
     }
     .left-player .losers-bracket {
-        color: #5A2E8C;
+        color: #6B8E23;
     }
     .right-player .losers-bracket {
         color: #FFC400
