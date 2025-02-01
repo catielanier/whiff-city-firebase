@@ -69,11 +69,12 @@
         position: relative;
     }
 
-    .scoreboard.bbcf {
+    .scoreboard.bbcf, .scoreboard.gbvs {
         font-size: 25px;
     }
 
-    .scoreboard.bbcf .tournament-round {
+    .scoreboard.bbcf .tournament-round,
+    .scoreboard.gbvs .tournament-round {
         height: 38px;
     }
     .scoreboard .tournament-round {
@@ -83,7 +84,8 @@
     .scoreboard .tournament-round p {
         margin-top: 10px;
     }
-    .scoreboard.bbcf .tournament-round p {
+    .scoreboard.bbcf .tournament-round p,
+    .scoreboard.gbvs .tournament-round p {
         margin-top: 5px;
     }
 
@@ -198,5 +200,23 @@
         margin-right: 300px;
         padding-right: 45px;
         padding-left: 45px;
+    }
+    .left-player.gbvs .score {
+        margin-left: 200px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .left-player.gbvs .player-info {
+        margin-right: 215px;
+    }
+
+    .right-player.gbvs .score {
+        margin-right: 200px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .right-player.gbvs .player-info {
+        margin-left: 215px;
     }
 </style>
