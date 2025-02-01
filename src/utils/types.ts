@@ -32,6 +32,7 @@ export interface FirebaseConfig {
 
 export interface GameInfo {
     title: string;
+    round: string;
 }
 
 export interface GameData {

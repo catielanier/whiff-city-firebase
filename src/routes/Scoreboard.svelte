@@ -22,7 +22,11 @@
 
 {#if players?.length && gameInfo}
     <div class="scoreboard">
-        <div class="tournament-round"></div>
+        <div class="tournament-round">
+            <p>
+                {gameInfo.round}
+            </p>
+        </div>
         <div class="wrapper">
             <div class="left-player {gameInfo.title}">
                 <div class="score"><span class="score-inner">{players[0].score}</span></div>
@@ -63,6 +67,14 @@
         font-style: normal;
         font-size: 30px;
         position: relative;
+    }
+
+    .scoreboard .tournament-round {
+        font-size: 20px;
+        color: #fff;
+    }
+    .scoreboard .tournament-round p {
+        margin-top: 10px;
     }
 
     .wrapper, .left-player, .right-player {
@@ -150,7 +162,7 @@
         top: 0;
         left: 50%;
         transform: translateX(-30%);
-        width: 200px;
+        width: 225px;
         height: 45px;
         background: #c065ff;
         clip-path: polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%);
