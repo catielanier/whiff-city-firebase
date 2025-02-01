@@ -22,6 +22,7 @@
 
 {#if players?.length && gameInfo}
     <div class="scoreboard">
+        <div class="tournament-round"></div>
         <div class="wrapper">
             <div class="left-player {gameInfo.title}">
                 <div class="score"><span class="score-inner">{players[0].score}</span></div>
@@ -61,6 +62,7 @@
         font-weight: 400;
         font-style: normal;
         font-size: 30px;
+        position: relative;
     }
 
     .wrapper, .left-player, .right-player {
@@ -141,5 +143,17 @@
     }
     .right-player .losers-bracket {
         color: #FFC400
+    }
+    .tournament-round {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 50%;
+        transform: translateX(-30%);
+        width: 200px;
+        height: 45px;
+        background: #c065ff;
+        clip-path: polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%);
+        overflow: hidden;
     }
 </style>
