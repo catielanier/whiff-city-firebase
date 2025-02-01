@@ -71,7 +71,7 @@
 
     .scoreboard .tournament-round {
         font-size: 20px;
-        color: #fff;
+        color: #280137;
     }
     .scoreboard .tournament-round p {
         margin-top: 10px;
