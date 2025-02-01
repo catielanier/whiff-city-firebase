@@ -99,6 +99,10 @@
         grid-gap: 65px;
     }
 
+    .left-player.tekken8 {
+        grid-template-columns: 1fr 8fr;
+    }
+
     .left-player.sf6 .player-info {
         margin-right: 220px;
     }
@@ -112,8 +116,17 @@
         grid-gap: 65px;
         grid-template-columns: 8fr 1fr;
     }
+    .right-player.tekken8 {
+        grid-template-columns: 8fr 1fr;
+    }
+    .left-player.tekken8 .player-info {
+        margin-right: 230px;
+    }
     .right-player.sf6 .player-info {
         margin-left: 220px;
+    }
+    .right-player.tekken8 .player-info {
+        margin-left: 230px;
     }
     .player-info .player, .score-inner {
         display: block;
