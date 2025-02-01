@@ -21,7 +21,7 @@
 </script>
 
 {#if players?.length && gameInfo}
-    <div class="scoreboard">
+    <div class="scoreboard {gameInfo.title}">
         <div class="tournament-round">
             <p>
                 {gameInfo.round}
@@ -69,12 +69,22 @@
         position: relative;
     }
 
+    .scoreboard.bbcf {
+        font-size: 25px;
+    }
+
+    .scoreboard.bbcf .tournament-round {
+        height: 38px;
+    }
     .scoreboard .tournament-round {
         font-size: 20px;
         color: #280137;
     }
     .scoreboard .tournament-round p {
         margin-top: 10px;
+    }
+    .scoreboard.bbcf .tournament-round p {
+        margin-top: 5px;
     }
 
     .wrapper, .left-player, .right-player {
@@ -180,5 +190,13 @@
         background: #c065ff;
         clip-path: polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%);
         overflow: hidden;
+    }
+    .left-player.bbcf {
+        margin-left: 300px;
+    }
+    .right-player.bbcf .score {
+        margin-right: 300px;
+        padding-right: 45px;
+        padding-left: 45px;
     }
 </style>
