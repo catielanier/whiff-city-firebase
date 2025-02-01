@@ -20,20 +20,36 @@
     })
 </script>
 
-<div class="scoreboard">
-    {#if players?.length && gameInfo}
+{#if players?.length && gameInfo}
+    <div class="scoreboard">
         <div class="wrapper">
             <div class="left-player {gameInfo.title}">
                 <div class="score"><span class="score-inner">{players[0].score}</span></div>
-                <div class="player-info"><span class="player"><span class="team">{players[0].teamName}</span> {players[0].playerName}</span></div>
+                <div class="player-info">
+                    <span class="player">
+                        <span class="team">{players[0].teamName}</span>
+                        {players[0].playerName}
+                        {#if players[0].isLosersBracket}
+                            <span class="losers-bracket">[L]</span>
+                        {/if}
+                    </span>
+                </div>
             </div>
             <div class="right-player {gameInfo.title}">
-                <div class="player-info"><span class="player"><span class="team">{players[1].teamName}</span> {players[1].playerName}</span></div>
+                <div class="player-info">
+                    <span class="player">
+                        <span class="team">{players[1].teamName}</span>
+                        {players[1].playerName}
+                        {#if players[1].isLosersBracket}
+                            <span class="losers-bracket">[L]</span>
+                        {/if}
+                    </span>
+                </div>
                 <div class="score"><span class="score-inner">{players[1].score}</span></div>
             </div>
         </div>
-    {/if}
-</div>
+    </div>
+{/if}
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
@@ -46,6 +62,7 @@
         font-style: normal;
         font-size: 30px;
     }
+
     .wrapper, .left-player, .right-player {
         display: grid;
     }
@@ -63,16 +80,26 @@
         transform: skewX(30deg);
         margin-right: 25px;
     }
+    .left-player.sf6 {
+        grid-template-columns: 1fr 8fr;
+        grid-gap: 65px;
+    }
+
     .left-player.sf6 .player-info {
-        margin-right: 250px;
+        margin-right: 220px;
     }
     .right-player {
         grid-template-columns: 6fr 1fr;
         transform: skewX(-30deg);
         margin-left: 27px;
     }
+
+    .right-player.sf6 {
+        grid-gap: 65px;
+        grid-template-columns: 8fr 1fr;
+    }
     .right-player.sf6 .player-info {
-        margin-left: 250px;
+        margin-left: 220px;
     }
     .player-info .player, .score-inner {
         display: block;
@@ -109,7 +136,10 @@
     .right-player .team {
         color: #FFED97;
     }
-    .losers-bracket {
-        background: #EB0405;
+    .left-player .losers-bracket {
+        color: #5A2E8C;
+    }
+    .right-player .losers-bracket {
+        color: #FFC400
     }
 </style>
