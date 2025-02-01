@@ -33,6 +33,7 @@
         e.preventDefault();
         players.forEach((player: Player): void => {
             player.score = 0;
+            player.isLosersBracket = false;
         });
         updateScoreboard();
     }
