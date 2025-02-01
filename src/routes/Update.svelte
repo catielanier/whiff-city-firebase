@@ -96,6 +96,8 @@
                             <option value={game.data}>{game.name}</option>
                         {/each}
                     </select>
+                    <p>Round:</p>
+                    <input type="text" bind:value={gameInfo.round}>
                 </div>
                 <div class="player-info">
                     <div class="player-one">
@@ -238,6 +240,9 @@
         margin-bottom: 20px;
     }
     select {
+        margin-bottom: 20px;
+    }
+    .game-info input[type="text"] {
         margin-bottom: 20px;
     }
 </style>
