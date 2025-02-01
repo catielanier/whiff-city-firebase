@@ -3,6 +3,7 @@ export interface Player {
     playerName: string;
     teamName: string;
     score: number;
+    isLosersBracket: boolean;
 }
 
 export interface Commentator {
