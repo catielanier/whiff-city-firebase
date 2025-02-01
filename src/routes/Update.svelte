@@ -99,6 +99,10 @@
                                 <p>Score:</p>
                                 <input type="number" bind:value={players[0].score} />
                             </div>
+                            <div class="losers-bracket">
+                                <p>Losers Bracket:</p>
+                                <input type="checkbox" bind:checked={players[0].isLosersBracket} />
+                            </div>
                         </div>
                     </div>
                     <div class="player-two">
@@ -115,6 +119,10 @@
                             <div class="score">
                                 <p>Score:</p>
                                 <input type="number" bind:value={players[1].score} />
+                            </div>
+                            <div class="losers-bracket">
+                                <p>Losers Bracket:</p>
+                                <input type="checkbox" bind:checked={players[1].isLosersBracket} />
                             </div>
                         </div>
                     </div>
@@ -191,8 +199,19 @@
     }
     .player-one-wrapper, .player-two-wrapper, .commentator-one-wrapper, .commentator-two-wrapper {
         display: grid;
+        grid-gap: 5px;
+    }
+
+    .losers-bracket {
+        text-align: center;
+    }
+
+    .player-one-wrapper, .player-two-wrapper {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    .commentator-one-wrapper, .commentator-two-wrapper {
         grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 20px;
     }
     .button-grid {
         margin-top: 20px;
