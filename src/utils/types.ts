@@ -50,3 +50,8 @@ export interface QueuedMatch {
     players: [QueuedPlayer, QueuedPlayer];
     game: string;
 }
+
+export interface Header {
+    'Content-Type': string;
+    Authorization: string;
+}

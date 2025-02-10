@@ -43,7 +43,7 @@ export const games: GameData[] = [
     }
 ]
 
-export const header = {
+export const header: Header = Object.freeze({
     'Content-Type': 'application/json',
     Authorization: `Bearer ${import.meta.env.VITE_START_GG_KEY}`
-}
+})
