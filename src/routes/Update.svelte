@@ -5,7 +5,7 @@
     import {firebase} from "../utils/firebase";
     import {games, header} from "../utils/data";
     import axios from "axios";
-    import {tournamentQuery} from "../utils/gqlQueries";
+    import {streamQueueQuery, tournamentQuery} from "../utils/gqlQueries";
     
     let players: Player[]
     let commentators: Commentator[]
@@ -50,7 +50,37 @@
         }, {
             headers: header
         }).then(res => {
-            console.log(res)
+            tournamentId = res.data.tournament.id;
+            retrieveStreamQueue(e);
+        });
+    }
+
+    const retrieveStreamQueue = (e: Event): void => {
+        e.preventDefault();
+        axios.post('https://api.start.gg/gql/alpha', {
+            query: streamQueueQuery,
+            variables: { tournamentId }
+        }, {
+            headers: header
+        }).then(res => {
+            const leftPlayer: Player = {
+                id: 1,
+                playerName: res.data.sets.slots[0].entrant.name,
+                teamName: res.data.sets.slots[0].entrant.team.name,
+                score: 0,
+                isLosersBracket: false
+            }
+            const rightPlayer: Player = {
+                id: 2,
+                playerName: res.data.sets.slots[1].entrant.name,
+                teamName: res.data.sets.slots[1].entrant.team.name,
+                score: 0,
+                isLosersBracket: false
+            }
+            players = [leftPlayer, rightPlayer];
+            updateScoreboard();
+        }).catch(err => {
+            errMsg = err.message;
         })
     }
 
