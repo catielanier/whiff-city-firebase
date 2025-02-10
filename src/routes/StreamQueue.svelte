@@ -23,10 +23,10 @@
             <div>Game</div>
         </div>
         {#each queue as match, i}
-            <div class="queue-item">
+            <div class="queue-item {i === 0 && 'playing'} {i === 1 && 'on-deck'}">
                 <div>{#if i === 0}Playing{:else if i === 1}On Deck{:else}{i + 1}{/if}</div>
-                <div>{match.players[0].teamName} {match.players[0].name}</div>
-                <div>{match.players[1].teamName} {match.players[1].name}</div>
+                <div><span>{match.players[0].teamName}</span> {match.players[0].name}</div>
+                <div><span>{match.players[1].teamName}</span> {match.players[1].name}</div>
                 <div>{match.game}</div>
             </div>
         {/each}
