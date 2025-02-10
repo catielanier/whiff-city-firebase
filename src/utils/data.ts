@@ -44,5 +44,6 @@ export const games: GameData[] = [
 ]
 
 export const header = {
+    'Content-Type': 'application/json',
     Authorization: `Bearer ${import.meta.env.VITE_START_GG_KEY}`
 }
