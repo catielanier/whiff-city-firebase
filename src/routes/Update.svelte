@@ -65,15 +65,15 @@
         }).then(res => {
             const leftPlayer: Player = {
                 id: 1,
-                playerName: res.data.sets.slots[0].entrant.name,
-                teamName: res.data.sets.slots[0].entrant.team.name,
+                playerName: res.data.streamQueue[0].sets.slots[0].entrant.name,
+                teamName: res.data.streamQueue[0].sets.slots[0].entrant.team.name,
                 score: 0,
                 isLosersBracket: false
             }
             const rightPlayer: Player = {
                 id: 2,
-                playerName: res.data.sets.slots[1].entrant.name,
-                teamName: res.data.sets.slots[1].entrant.team.name,
+                playerName: res.data.streamQueue[0].sets.slots[1].entrant.name,
+                teamName: res.data.streamQueue[0].sets.slots[1].entrant.team.name,
                 score: 0,
                 isLosersBracket: false
             }
