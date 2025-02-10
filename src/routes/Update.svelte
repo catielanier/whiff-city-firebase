@@ -1,6 +1,6 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import type {Commentator, Player, UpdateData, GameInfo} from "../utils/types";
+    import type {Commentator, Player, UpdateData, GameInfo, QueuedMatch} from "../utils/types";
     import {getDatabase, ref, onValue, get, update} from "firebase/database";
     import {firebase} from "../utils/firebase";
     import {games, header} from "../utils/data";
@@ -41,8 +41,8 @@
         return tournamentUrl.replace('https://www.start.gg/', '');
     }
 
-    const retrieveTournament = (e: Event): void => {
-        e.preventDefault();
+    const retrieveTournament = (): void => {
+        isLoading = true;
         const slug = generateSlug();
         axios.post('https://api.start.gg/gql/alpha', {
             query: tournamentQuery,
@@ -51,12 +51,12 @@
             headers: header
         }).then(res => {
             tournamentId = res.data.tournament.id;
-            retrieveStreamQueue(e);
+            retrieveStreamQueue();
         });
     }
 
-    const retrieveStreamQueue = (e: Event): void => {
-        e.preventDefault();
+    const retrieveStreamQueue = (): void => {
+        isLoading = true;
         axios.post('https://api.start.gg/gql/alpha', {
             query: streamQueueQuery,
             variables: { tournamentId }
@@ -65,22 +65,52 @@
         }).then(res => {
             const leftPlayer: Player = {
                 id: 1,
-                playerName: res.data.streamQueue[0].sets.slots[0].entrant.name,
-                teamName: res.data.streamQueue[0].sets.slots[0].entrant.team.name,
+                playerName: res.data.streamQueue[0].sets[0].slots[0].entrant.name,
+                teamName: res.data.streamQueue[0].sets[0].slots[0].entrant.team.name,
                 score: 0,
                 isLosersBracket: false
             }
             const rightPlayer: Player = {
                 id: 2,
-                playerName: res.data.streamQueue[0].sets.slots[1].entrant.name,
-                teamName: res.data.streamQueue[0].sets.slots[1].entrant.team.name,
+                playerName: res.data.streamQueue[0].sets[0].slots[1].entrant.name,
+                teamName: res.data.streamQueue[0].sets[0].slots[1].entrant.team.name,
                 score: 0,
                 isLosersBracket: false
             }
             players = [leftPlayer, rightPlayer];
             updateScoreboard();
+            updateStreamQueue(res.data.streamQueue[0].sets);
         }).catch(err => {
             errMsg = err.message;
+        })
+    }
+
+    const updateStreamQueue = (sets: any[]): void => {
+        const queue: QueuedMatch[] = [];
+        sets.forEach((set: any) => {
+            const match: QueuedMatch = {
+                id: set.id,
+                game: set.event.videogame.name,
+                players: [
+                    {
+                        name: set.slots[0].entrant.name,
+                        teamName: set.slots[0].entrant.team.name
+                    },
+                    {
+                        name: set.slots[1].entrant.name,
+                        teamName: set.slots[1].entrant.team.name
+                    }
+                ]
+            }
+            queue.push(match);
+        })
+        const db = getDatabase(firebase);
+        const reference = ref(db, '/streamQueue');
+        update(reference, queue).then(_ => {
+            isLoading = false;
+        }).catch(_ => {
+            errMsg = 'Error updating stream queue. Try again.';
+            isLoading = false;
         })
     }
 
@@ -91,6 +121,11 @@
             player.isLosersBracket = false;
         });
         updateScoreboard();
+    }
+
+    const submitResults = (e: Event): void => {
+        e.preventDefault();
+
     }
 
     const swapSides = (e: Event): void => {
@@ -139,11 +174,18 @@
                 e.preventDefault();
                 updateScoreboard();
             }}>
+                <input type="text" bind:value={tournamentUrl} placeholder="Tournament URL" />
+                <input type="text" bind:value={streamChannel} placeholder="Stream Channel" />
                 <div class="button-grid top">
                     <button type="submit">Update</button>
                     <button on:click={clearScores}>Clear Scores</button>
                     <button on:click={swapSides}>Swap Player Sides</button>
                     <button on:click={swapCommentatorSides}>Swap Commentator Sides</button>
+                    <button on:click={(e) => {
+                        e.preventDefault();
+                        !tournamentId ? retrieveTournament() : retrieveStreamQueue();
+                    }}>Retrieve Stream Queue</button>
+                    <button on:click={submitResults}>Submit Match Results</button>
                 </div>
                 <div class="game-info">
                     <p>Game:</p>

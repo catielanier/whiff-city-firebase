@@ -39,3 +39,14 @@ export interface GameData {
     name: string;
     data: string;
 }
+
+export interface QueuedPlayer {
+    name: string;
+    teamName: string;
+}
+
+export interface QueuedMatch {
+    id: string;
+    players: [QueuedPlayer, QueuedPlayer];
+    game: string;
+}
