@@ -42,3 +42,7 @@ export const games: GameData[] = [
         data: 'vf5'
     }
 ]
+
+export const header = {
+    Authorization: `Bearer ${import.meta.env.VITE_START_GG_KEY}`
+}

@@ -3,14 +3,22 @@
     import type {Commentator, Player, UpdateData, GameInfo} from "../utils/types";
     import {getDatabase, ref, onValue, get, update} from "firebase/database";
     import {firebase} from "../utils/firebase";
-    import { games } from "../utils/data";
+    import {games, header} from "../utils/data";
+    import axios from "axios";
+    import {tournamentQuery} from "../utils/gqlQueries";
     
     let players: Player[]
     let commentators: Commentator[]
     let gameInfo: GameInfo;
 
+    let tournamentUrl: string;
+
+    let tournamentId: string;
+
     let isLoading: boolean = false;
     let errMsg: string | null;
+
+    let streamChannel: string;
 
     const updateScoreboard = async (): Promise<void> => {
         isLoading = true;
@@ -26,6 +34,23 @@
         }).catch(_ => {
             errMsg = 'Error updating info. Try again.';
             isLoading = false;
+        })
+    }
+
+    const generateSlug = (): string => {
+        return tournamentUrl.replace('https://www.start.gg/', '');
+    }
+
+    const retrieveTournament = (e: Event): void => {
+        e.preventDefault();
+        const slug = generateSlug();
+        axios.post('https://api.start.gg/gql/alpha', {
+            query: tournamentQuery,
+            variables: { slug }
+        }, {
+            headers: header
+        }).then(res => {
+            console.log(res)
         })
     }
 
