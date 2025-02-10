@@ -1,4 +1,4 @@
-import type {GameData} from "./types";
+import type {GameData, Header} from "./types";
 
 export const games: GameData[] = [
     {
