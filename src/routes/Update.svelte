@@ -15,6 +15,8 @@
 
     let tournamentId: string;
 
+    let currentSetId: string;
+
     let isLoading: boolean = false;
     let errMsg: string | null;
 
@@ -68,16 +70,19 @@
                 playerName: res.data.streamQueue[0].sets[0].slots[0].entrant.name,
                 teamName: res.data.streamQueue[0].sets[0].slots[0].entrant.team.name,
                 score: 0,
-                isLosersBracket: false
+                isLosersBracket: false,
+                startId: res.data.streamQueue[0].sets[0].slots[0].entrant.id
             }
             const rightPlayer: Player = {
                 id: 2,
                 playerName: res.data.streamQueue[0].sets[0].slots[1].entrant.name,
                 teamName: res.data.streamQueue[0].sets[0].slots[1].entrant.team.name,
                 score: 0,
-                isLosersBracket: false
+                isLosersBracket: false,
+                startId: res.data.streamQueue[0].sets[0].slots[1].entrant.id
             }
             players = [leftPlayer, rightPlayer];
+            currentSetId = res.data.streamQueue[0].sets[0].id;
             updateScoreboard();
             updateStreamQueue(res.data.streamQueue[0].sets);
         }).catch(err => {
@@ -125,7 +130,58 @@
 
     const submitResults = (e: Event): void => {
         e.preventDefault();
-
+        const gameData: any = [];
+        const winnerId: string = players[0].score > players[1].score ? players[0].startId : players[1].startId;
+        let gameNum: number = 1;
+        if (winnerId === players[0].startId) {
+            for (let i = 0; i < players[1].score; i++) {
+                const set: any = {
+                    winnerId: players[1].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+            for (let i = 0; i < players[0].score; i++) {
+                const set: any = {
+                    winnerId: players[0].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+        } else {
+            for (let i = 0; i < players[0].score; i++) {
+                const set: any = {
+                    winnerId: players[0].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+            for (let i = 0; i < players[1].score; i++) {
+                const set: any = {
+                    winnerId: players[1].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+        }
+        const setData: any = {
+            setId: currentSetId,
+            winnerId,
+            gameData
+        }
+        const mutation = `mutation ReportSetMutation($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
+            reportBracketSet(setId: $setId, winnerId: $winnerId, gameData: $gameData) {}
+        }`
+        axios.post('https://api.start.gg/gql/alpha', {
+            mutation,
+            variables: setData
+        }, {
+            headers: header
+        }).then(_ => retrieveStreamQueue()).catch(err => errMsg = err.message);
     }
 
     const swapSides = (e: Event): void => {
