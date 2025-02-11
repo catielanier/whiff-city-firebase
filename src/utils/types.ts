@@ -4,6 +4,7 @@ export interface Player {
     teamName: string;
     score: number;
     isLosersBracket: boolean;
+    startId: string;
 }
 
 export interface Commentator {
@@ -49,9 +50,4 @@ export interface QueuedMatch {
     id: string;
     players: [QueuedPlayer, QueuedPlayer];
     game: string;
-}
-
-export interface Header {
-    'Content-Type': string;
-    Authorization: string;
 }
