@@ -52,7 +52,6 @@
         }, {
             headers: header
         }).then(res => {
-            console.log({res})
             tournamentId = res.data.data.tournament.id;
             retrieveStreamQueue();
         });
@@ -66,7 +65,6 @@
         }, {
             headers: header
         }).then(res => {
-            console.log({res, stage: 'retrieveStreamQueue'})
             const leftPlayer: Player = {
                 id: 1,
                 playerName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
@@ -93,27 +91,29 @@
     }
 
     const updateStreamQueue = (sets: any[]): void => {
-        const queue: QueuedMatch[] = [];
+        const updateInfo: any = {
+            streamQueue: []
+        };
         sets.forEach((set: any) => {
             const match: QueuedMatch = {
                 id: set.id,
                 game: set.event.videogame.name,
                 players: [
                     {
-                        name: set.slots[0].entrant.name,
-                        teamName: set.slots[0].entrant.team.name
+                        name: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
+                        teamName: set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
                     },
                     {
-                        name: set.slots[1].entrant.name,
-                        teamName: set.slots[1].entrant.team.name
+                        name: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
+                        teamName: set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
                     }
                 ]
             }
-            queue.push(match);
+            updateInfo.streamQueue.push(match);
         })
         const db = getDatabase(firebase);
-        const reference = ref(db, '/streamQueue');
-        update(reference, queue).then(_ => {
+        const reference = ref(db);
+        update(reference, updateInfo).then(_ => {
             isLoading = false;
         }).catch(_ => {
             errMsg = 'Error updating stream queue. Try again.';
