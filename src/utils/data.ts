@@ -1,4 +1,4 @@
-import type {GameData} from "./types";
+import type {GameData, Header} from "./types";
 
 export const games: GameData[] = [
     {
@@ -41,4 +41,9 @@ export const games: GameData[] = [
         name: "Virtua Fighter 5 R.E.V.O.",
         data: 'vf5'
     }
-]
+])
+
+export const header = Object.freeze({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${import.meta.env.VITE_START_GG_KEY}`
+})

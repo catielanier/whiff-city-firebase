@@ -6,6 +6,7 @@
   import Scoreboard from "./routes/Scoreboard.svelte";
   import Commentators from "./routes/Commentators.svelte";
   import {getToken} from "./utils/tokenService";
+  import StreamQueue from "./routes/StreamQueue.svelte";
 
   let loggedIn: boolean | null;
 
@@ -29,5 +30,6 @@
     {/if}
     <Route exact path="/scoreboard" component={Scoreboard} />
     <Route exact path="/commentators" component={Commentators} />
+    <Route exact path="/queue" component="{StreamQueue}" />
   </main>
 </Router>

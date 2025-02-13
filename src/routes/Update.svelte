@@ -1,16 +1,26 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import type {Commentator, Player, UpdateData, GameInfo} from "../utils/types";
+    import type {Commentator, Player, UpdateData, GameInfo, QueuedMatch} from "../utils/types";
     import {getDatabase, ref, onValue, get, update} from "firebase/database";
     import {firebase} from "../utils/firebase";
-    import { games } from "../utils/data";
+    import {games, header} from "../utils/data";
+    import axios from "axios";
+    import {streamQueueQuery, tournamentQuery} from "../utils/gqlQueries";
     
     let players: Player[]
     let commentators: Commentator[]
     let gameInfo: GameInfo;
 
+    let tournamentUrl: string;
+
+    let tournamentId: string;
+
+    let currentSetId: string;
+
     let isLoading: boolean = false;
     let errMsg: string | null;
+
+    let streamChannel: string;
 
     const updateScoreboard = async (): Promise<void> => {
         isLoading = true;
@@ -29,6 +39,96 @@
         })
     }
 
+    const generateSlug = (): string => {
+        return tournamentUrl.replace('https://www.start.gg/', '');
+    }
+
+    const retrieveTournament = (): void => {
+        isLoading = true;
+        const slug = generateSlug();
+        axios.post('https://api.start.gg/gql/alpha', {
+            query: tournamentQuery,
+            variables: { slug }
+        }, {
+            headers: header
+        }).then(res => {
+            tournamentId = res.data.data.tournament.id;
+            retrieveStreamQueue();
+        });
+    }
+
+    const retrieveStreamQueue = (): void => {
+        isLoading = true;
+        axios.post('https://api.start.gg/gql/alpha', {
+            query: streamQueueQuery,
+            variables: { tournamentId }
+        }, {
+            headers: header
+        }).then(res => {
+            const leftPlayer: Player = {
+                id: 1,
+                playerName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
+                teamName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.includes(" | ") ?
+                    res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/\s\|\s.*/, "") :
+                    "",
+                score: 0,
+                isLosersBracket: false,
+                startId: res.data.data.streamQueue[0].sets[0].slots[0].entrant.id
+            }
+            const rightPlayer: Player = {
+                id: 2,
+                playerName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
+                teamName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.includes(" | ") ?
+                    res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/\s\|\s.*/, "") :
+                    "",
+                score: 0,
+                isLosersBracket: false,
+                startId: res.data.data.streamQueue[0].sets[0].slots[1].entrant.id
+            }
+            players = [leftPlayer, rightPlayer];
+            currentSetId = res.data.data.streamQueue[0].sets[0].id;
+            updateScoreboard();
+            updateStreamQueue(res.data.data.streamQueue[0].sets);
+        }).catch(err => {
+            errMsg = err.message;
+        })
+    }
+
+    const updateStreamQueue = (sets: any[]): void => {
+        const updateInfo: any = {
+            streamQueue: []
+        };
+        sets.forEach((set: any) => {
+            const match: QueuedMatch = {
+                id: set.id,
+                game: set.event.videogame.name,
+                players: [
+                    {
+                        name: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
+                        teamName: set.slots[0].entrant.name = set.slots[0].entrant.name.includes(" | ")
+                            ? set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
+                            : ""
+                    },
+                    {
+                        name: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
+                        teamName: set.slots[1].entrant.name = set.slots[1].entrant.name.includes(" | ")
+                            ? set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
+                            : ""
+                    }
+                ]
+            }
+            updateInfo.streamQueue.push(match);
+        })
+        const db = getDatabase(firebase);
+        const reference = ref(db);
+        update(reference, updateInfo).then(_ => {
+            isLoading = false;
+        }).catch(_ => {
+            errMsg = 'Error updating stream queue. Try again.';
+            isLoading = false;
+        })
+    }
+
     const clearScores = (e: Event): void => {
         e.preventDefault();
         players.forEach((player: Player): void => {
@@ -36,6 +136,62 @@
             player.isLosersBracket = false;
         });
         updateScoreboard();
+    }
+
+    const submitResults = (e: Event): void => {
+        e.preventDefault();
+        const gameData: any = [];
+        const winnerId: string = players[0].score > players[1].score ? players[0].startId : players[1].startId;
+        let gameNum: number = 1;
+        if (winnerId === players[0].startId) {
+            for (let i = 0; i < players[1].score; i++) {
+                const set: any = {
+                    winnerId: players[1].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+            for (let i = 0; i < players[0].score; i++) {
+                const set: any = {
+                    winnerId: players[0].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+        } else {
+            for (let i = 0; i < players[0].score; i++) {
+                const set: any = {
+                    winnerId: players[0].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+            for (let i = 0; i < players[1].score; i++) {
+                const set: any = {
+                    winnerId: players[1].startId,
+                    gameNum
+                }
+                gameData.push(set);
+                gameNum++;
+            }
+        }
+        const setData: any = {
+            setId: currentSetId,
+            winnerId,
+            gameData
+        }
+        const mutation = `mutation ReportSetMutation($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
+            reportBracketSet(setId: $setId, winnerId: $winnerId, gameData: $gameData) {}
+        }`
+        axios.post('https://api.start.gg/gql/alpha', {
+            mutation,
+            variables: setData
+        }, {
+            headers: header
+        }).then(_ => retrieveStreamQueue()).catch(err => errMsg = err.message);
     }
 
     const swapSides = (e: Event): void => {
@@ -84,11 +240,18 @@
                 e.preventDefault();
                 updateScoreboard();
             }}>
+                <input type="text" bind:value={tournamentUrl} placeholder="Tournament URL" />
+                <input type="text" bind:value={streamChannel} placeholder="Stream Channel" />
                 <div class="button-grid top">
                     <button type="submit">Update</button>
                     <button on:click={clearScores}>Clear Scores</button>
                     <button on:click={swapSides}>Swap Player Sides</button>
                     <button on:click={swapCommentatorSides}>Swap Commentator Sides</button>
+                    <button on:click={(e) => {
+                        e.preventDefault();
+                        !tournamentId ? retrieveTournament() : retrieveStreamQueue();
+                    }}>Retrieve Stream Queue</button>
+                    <button on:click={submitResults}>Submit Match Results</button>
                 </div>
                 <div class="game-info">
                     <p>Game:</p>
