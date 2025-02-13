@@ -15,6 +15,7 @@
 
 <div class="stream-queue">
     <h1>Stream Queue:</h1>
+    <h3>Twitch Channel: <span>BarrieWhiffCity</span></h3>
     <div class="queue-wrapper">
         <div class="queue-header">
             <div>Position</div>
