@@ -68,7 +68,9 @@
             const leftPlayer: Player = {
                 id: 1,
                 playerName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
-                teamName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/\s\|\s.*/, ""),
+                teamName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.includes(" | ") ?
+                    res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/\s\|\s.*/, "") :
+                    "",
                 score: 0,
                 isLosersBracket: false,
                 startId: res.data.data.streamQueue[0].sets[0].slots[0].entrant.id
@@ -76,7 +78,9 @@
             const rightPlayer: Player = {
                 id: 2,
                 playerName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
-                teamName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/\s\|\s.*/, ""),
+                teamName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.includes(" | ") ?
+                    res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/\s\|\s.*/, "") :
+                    "",
                 score: 0,
                 isLosersBracket: false,
                 startId: res.data.data.streamQueue[0].sets[0].slots[1].entrant.id
@@ -101,11 +105,15 @@
                 players: [
                     {
                         name: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
-                        teamName: set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
+                        teamName: set.slots[0].entrant.name = set.slots[0].entrant.name.includes(" | ")
+                            ? set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
+                            : ""
                     },
                     {
                         name: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
-                        teamName: set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
+                        teamName: set.slots[1].entrant.name = set.slots[1].entrant.name.includes(" | ")
+                            ? set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
+                            : ""
                     }
                 ]
             }
