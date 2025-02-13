@@ -183,15 +183,15 @@
             winnerId,
             gameData
         }
-        const mutation = `mutation ReportSetMutation($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
-            reportBracketSet(setId: $setId, winnerId: $winnerId, gameData: $gameData) {}
+        const query = `mutation ReportSetMutation($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
+            reportBracketSet(setId: $setId, winnerId: $winnerId, gameData: $gameData) { id }
         }`
         axios.post('https://api.start.gg/gql/alpha', {
-            mutation,
+            query,
             variables: setData
         }, {
             headers: header
-        }).then(_ => retrieveStreamQueue()).catch(err => errMsg = err.message);
+        }).then(_ => tournamentId ? retrieveStreamQueue() : retrieveTournament()).catch(err => errMsg = err.message);
     }
 
     const swapSides = (e: Event): void => {
