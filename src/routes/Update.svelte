@@ -52,7 +52,8 @@
         }, {
             headers: header
         }).then(res => {
-            tournamentId = res.data.tournament.id;
+            console.log({res})
+            tournamentId = res.data.data.tournament.id;
             retrieveStreamQueue();
         });
     }
@@ -65,26 +66,27 @@
         }, {
             headers: header
         }).then(res => {
+            console.log({res, stage: 'retrieveStreamQueue'})
             const leftPlayer: Player = {
                 id: 1,
-                playerName: res.data.streamQueue[0].sets[0].slots[0].entrant.name,
-                teamName: res.data.streamQueue[0].sets[0].slots[0].entrant.team.name,
+                playerName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
+                teamName: res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(/\s\|\s.*/, ""),
                 score: 0,
                 isLosersBracket: false,
-                startId: res.data.streamQueue[0].sets[0].slots[0].entrant.id
+                startId: res.data.data.streamQueue[0].sets[0].slots[0].entrant.id
             }
             const rightPlayer: Player = {
                 id: 2,
-                playerName: res.data.streamQueue[0].sets[0].slots[1].entrant.name,
-                teamName: res.data.streamQueue[0].sets[0].slots[1].entrant.team.name,
+                playerName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
+                teamName: res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(/\s\|\s.*/, ""),
                 score: 0,
                 isLosersBracket: false,
-                startId: res.data.streamQueue[0].sets[0].slots[1].entrant.id
+                startId: res.data.data.streamQueue[0].sets[0].slots[1].entrant.id
             }
             players = [leftPlayer, rightPlayer];
-            currentSetId = res.data.streamQueue[0].sets[0].id;
+            currentSetId = res.data.data.streamQueue[0].sets[0].id;
             updateScoreboard();
-            updateStreamQueue(res.data.streamQueue[0].sets);
+            updateStreamQueue(res.data.data.streamQueue[0].sets);
         }).catch(err => {
             errMsg = err.message;
         })

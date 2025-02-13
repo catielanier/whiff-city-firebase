@@ -7,30 +7,30 @@ export const tournamentQuery = `
 `
 
 export const streamQueueQuery = `
-    query StreamQueue($tournamentId: ID!) {
-        streamQueue(tournamentId: $tournamentId) {
+    query TournamentQuery($tournamentId: ID!) {
+    streamQueue(tournamentId: $tournamentId) {
+        id
+        sets {
+        id
+        slots {
+          id
+          entrant {
             id
-            sets {
-                id
-                slots {
-                    id
-                    entrant {
-                        id
-                        team {
-                            id
-                            name
-                        }
-                        name
-                    }
-                }
-                event {
-                    videogame {
-                        name
-                        displayName
-                        id
-                    }
-                }
+            team {
+              id
+              name
             }
+            name
+          }
         }
+        event {
+          videogame {
+            name
+            displayName
+            id
+          }
+        }
+      }
     }
+}
 `
