@@ -92,8 +92,7 @@
     }
 
     .queue-wrapper .queue-item.playing {
-        background: #EB0405;
-        color: white;
+        background: #63c165;
     }
 
     .queue-wrapper .queue-item.playing span {
@@ -101,24 +100,23 @@
     }
 
     .queue-wrapper .queue-item.on-deck {
-        background: #c065ff;
-        color: #280137;
+        background: #FFED97;
     }
 
     .queue-wrapper .queue-item.on-deck span {
-        color: #FFED97;
+        color: #EB0405;
     }
     .queue-wrapper {
         font-size: 1.6rem;
     }
 
     .queue-wrapper .queue-item {
-        background: #FFED97;
-        color: black;
+        background: #c065ff;
+        color: #280137;
         transform: skewX(30deg);
     }
 
     .queue-wrapper .queue-item span {
-        color: #EB0405;
+        color: #FFED97;
     }
 </style>
