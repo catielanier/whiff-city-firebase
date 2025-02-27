@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import {getDatabase, ref, onValue} from "firebase/database";
-    import type { Player } from "../utils/types";
+    import type {GameInfo, Player} from "../utils/types";
     import {firebase} from "../utils/firebase";
 
     let players: Player[];

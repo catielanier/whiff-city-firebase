@@ -1,6 +1,6 @@
-import type {GameData, Header} from "./types";
+import type {GameData} from "./types";
 
-export const games: GameData[] = [
+export const games: readonly GameData[] = Object.freeze([
     {
         name: "Blazblue Central Fiction",
         data: 'bbcf'
