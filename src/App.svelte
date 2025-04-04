@@ -30,8 +30,8 @@
     {:else}
       <Route path="/"><Login {setLogin} /></Route>
     {/if}
-    <Route exact path="/scoreboard" component={Scoreboard} />
-    <Route exact path="/commentators" component={Commentators} />
-    <Route exact path="/queue" component={StreamQueue} />
+    <Route exact path="/scoreboard/:id" component={Scoreboard} />
+    <Route exact path="/commentators/:id" component={Commentators} />
+    <Route exact path="/queue/:id" component={StreamQueue} />
   </main>
 </Router>
