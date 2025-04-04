@@ -56,16 +56,22 @@ export interface Scoreboard {
   players: [Player, Player];
   commentators: Commentator[];
   gameInfo: GameInfo;
+  scoreboardName: string;
+  streamUrl: string;
+  isTeams: boolean;
 }
 
 export interface Scoreboards {
-  streamName: string;
   startGGUri: string;
   scoreboards: Scoreboard[];
+}
+
+export interface ScoreboardsSimple {
+  scoreboardName: string;
+  id: string;
 }
 
 export interface Queue {
   streamName: string;
   queue: QueuedMatch[];
 }
-
