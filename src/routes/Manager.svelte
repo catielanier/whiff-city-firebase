@@ -65,6 +65,23 @@
     }
   };
 
+  const getScoreboard = (): void => {
+    const scoreboardRef = ref(database, `/scoreboards/${$scoreboardId}`);
+    get(scoreboardRef)
+      .then((res) => {
+        const data = res.val();
+        if (data) {
+          scoreboardName.set(data.scoreboardName);
+          streamUrl.set(data.streamUrl);
+          isTeams.set(data.isTeams);
+        }
+      })
+      .catch((error) => {
+        success.set(false);
+        error.set(error.message);
+      });
+  };
+
   onMount(() => {
     onValue(reference, (res) => {
       const data = res.val();
@@ -89,7 +106,7 @@
     <p class="error"><span>Error:</span> {$error}</p>
   {/if}
   <h1>Scoreboard manager</h1>
-  <select bind:value={$scoreboardId}>
+  <select bind:value={$scoreboardId} on:change={getScoreboard}>
     <option value="" disabled selected>Select a scoreboard</option>
     {#each $scoreboards as scoreboard}
       <option value={scoreboard.id}>{scoreboard.scoreboardName}</option>

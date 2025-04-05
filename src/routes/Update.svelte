@@ -6,54 +6,69 @@
     UpdateData,
     GameInfo,
     QueuedMatch,
+    ScoreboardsSimple,
   } from "../utils/types";
   import { getDatabase, ref, onValue, get, update } from "firebase/database";
-  import { writable } from "svelte/store";
+  import { derived, writable } from "svelte/store";
   import { firebase } from "../utils/firebase";
   import { games, header } from "../utils/data";
   import axios from "axios";
   import { streamQueueQuery, tournamentQuery } from "../utils/gqlQueries";
+  import debounce from "debounce";
 
   const players = writable<Player[]>([]);
   const commentators = writable<Commentator[]>([]);
   const scoreboardId = writable<String>("");
-  const scoreboards = writable([]);
-  let gameInfo: GameInfo;
+  const scoreboards = writable<ScoreboardsSimple[]>([]);
+  const gameInfo = writable<GameInfo>({ title: "sf6", round: "" });
+  const isTeams = writable<boolean>(false);
 
   const tournamentUrl = writable<string>("");
   const tournamentId = writable<string>("");
   const currentSetId = writable<string>("");
-
-  let isLoading: boolean = false;
-  let errMsg: string | null;
-
   const streamChannel = writable<string>("");
 
+  const isLoading = writable<boolean>(false);
+  const errMsg = writable<string | null>(null);
+
   const updateScoreboard = async (): Promise<void> => {
-    isLoading = true;
+    isLoading.set(true);
     const updateInfo: UpdateData = {
       players: $players,
       commentators: $commentators,
-      gameInfo,
+      gameInfo: $gameInfo!,
     };
     const db = getDatabase(firebase);
     const reference = ref(db);
     update(reference, updateInfo)
       .then((_) => {
-        isLoading = false;
+        isLoading.set(false);
       })
       .catch((_) => {
-        errMsg = "Error updating info. Try again.";
-        isLoading = false;
+        errMsg.set("Error updating info. Try again.");
+        isLoading.set(false);
       });
   };
+
+  const combined = derived(
+    [players, commentators, gameInfo],
+    ([$players, $commentators, $gameInfo]) => {
+      return null;
+    }
+  );
+
+  const debouncedUpdate = debounce(updateScoreboard, 3000);
+
+  combined.subscribe(() => {
+    debouncedUpdate();
+  });
 
   const generateSlug = (): string => {
     return $tournamentUrl.replace("https://www.start.gg/", "");
   };
 
   const retrieveTournament = (): void => {
-    isLoading = true;
+    isLoading.set(true);
     const slug = generateSlug();
     axios
       .post(
@@ -67,7 +82,7 @@
         }
       )
       .then((res) => {
-        $tournamentId = res.data.data.tournament.id;
+        tournamentId.set(res.data.data.tournament.id);
         retrieveStreamQueue();
       });
   };
@@ -75,13 +90,13 @@
   const retrieveStreamQueue = (
     shouldUpdateScoreboard: boolean = true
   ): void => {
-    isLoading = true;
+    isLoading.set(true);
     axios
       .post(
         "https://api.start.gg/gql/alpha",
         {
           query: streamQueueQuery,
-          variables: { tournamentId },
+          variables: { tournamentId: $tournamentId },
         },
         {
           headers: header,
@@ -134,7 +149,7 @@
         updateStreamQueue(res.data.data.streamQueue[0].sets);
       })
       .catch((err) => {
-        errMsg = err.message;
+        errMsg.set(err.message);
       });
   };
 
@@ -169,17 +184,17 @@
     const reference = ref(db);
     update(reference, updateInfo)
       .then((_) => {
-        isLoading = false;
+        isLoading.set(false);
       })
       .catch((_) => {
-        errMsg = "Error updating stream queue. Try again.";
-        isLoading = false;
+        errMsg.set("Error updating stream queue. Try again.");
+        isLoading.set(false);
       });
   };
 
   const clearScores = (e: Event): void => {
     e.preventDefault();
-    players.forEach((player: Player): void => {
+    $players.forEach((player: Player): void => {
       player.score = 0;
       player.isLosersBracket = false;
     });
@@ -194,15 +209,15 @@
     e.preventDefault();
     const gameData: any = [];
     const winnerId: string =
-      players[0].score > players[1].score
-        ? players[0].startId
-        : players[1].startId;
+      $players[0].score > $players[1].score
+        ? $players[0].startId
+        : $players[1].startId;
     const loserId: string =
-      players[0].score < players[1].score
-        ? players[0].startId
-        : players[1].startId;
-    const winnerScore: number = Math.max(players[0].score, players[1].score);
-    const loserScore: number = Math.min(players[0].score, players[1].score);
+      $players[0].score < $players[1].score
+        ? $players[0].startId
+        : $players[1].startId;
+    const winnerScore: number = Math.max($players[0].score, $players[1].score);
+    const loserScore: number = Math.min($players[0].score, $players[1].score);
     let gameNum: number = 1;
     for (let i = 0; i < loserScore; i++) {
       const set: any = {
@@ -240,55 +255,88 @@
         }
       )
       .then((_) =>
-        tournamentId ? retrieveStreamQueue() : retrieveTournament()
+        $tournamentId ? retrieveStreamQueue() : retrieveTournament()
       )
-      .catch((err) => (errMsg = err.message));
+      .catch((err) => errMsg.set(err.message));
   };
 
   const swapSides = (e: Event): void => {
     e.preventDefault();
-    const oldLeft: Player = { ...players[0] };
-    const oldRight: Player = { ...players[1] };
+    const oldLeft: Player = { ...$players[0] };
+    const oldRight: Player = { ...$players[1] };
     oldLeft.id = 2;
     oldRight.id = 1;
-    players[0] = oldRight;
-    players[1] = oldLeft;
+    $players[0] = oldRight;
+    $players[1] = oldLeft;
     updateScoreboard();
   };
 
   const swapCommentatorSides = (e: Event): void => {
     e.preventDefault();
-    const oldLeft: Commentator = { ...commentators[0] };
-    const oldRight: Commentator = { ...commentators[1] };
+    const oldLeft: Commentator = { ...$commentators[0] };
+    const oldRight: Commentator = { ...$commentators[1] };
     oldLeft.id = 2;
     oldRight.id = 1;
-    commentators[0] = oldRight;
-    commentators[1] = oldLeft;
+    $commentators[0] = oldRight;
+    $commentators[1] = oldLeft;
     updateScoreboard();
+  };
+
+  const getScoreboard = (): void => {
+    const database = getDatabase(firebase);
+    const reference = ref(database, `/scoreboards/${$scoreboardId}`);
+    onValue(reference, (res) => {
+      const data = res.val();
+      if (data) {
+        $players = data.players;
+        $commentators = data.commentators;
+        $gameInfo = data.gameInfo;
+        $tournamentUrl = data.tournamentUrl;
+        $streamChannel = data.streamChannel;
+        $isTeams = data.isTeams;
+      }
+    });
   };
 
   onMount(async () => {
     const database = getDatabase(firebase);
-    const playersRef = ref(database, "/players");
-    const commentatorsRef = ref(database, "/commentators");
-    const gameRef = ref(database, "/gameInfo");
-    onValue(playersRef, (res) => {
-      players = res.val();
-    });
-    get(commentatorsRef).then((res) => {
-      commentators = res.val();
-    });
-    get(gameRef).then((res) => {
-      gameInfo = res.val();
+    const reference = ref(database, "/scoreboards");
+    get(reference).then((res) => {
+      const data = res.val();
+      if (data) {
+        const scoreboardList: ScoreboardsSimple[] = Object.keys(data).map(
+          (key) => ({
+            id: key,
+            scoreboardName: data[key].scoreboardName,
+          })
+        );
+        scoreboards.set(scoreboardList);
+      }
     });
   });
 
   setInterval(() => {
-    retrieveStreamQueue(false);
+    if ($tournamentId) {
+      retrieveStreamQueue(false);
+    }
   }, 30000);
 </script>
 
 <div class="update">
+  {#if $scoreboards?.length}
+    <select
+      name="scoreboards"
+      bind:value={$scoreboardId}
+      on:change={getScoreboard}
+    >
+      <option value="" disabled selected>Select a scoreboard</option>
+      {#each $scoreboards as scoreboard}
+        <option value={scoreboard.id}>{scoreboard.scoreboardName}</option>
+      {/each}
+    </select>
+  {:else if !$scoreboards?.length && !isLoading}
+    <p class="error">No scoreboards found. Please create a scoreboard first.</p>
+  {/if}
   {#if $players?.length && $commentators?.length && gameInfo}
     <div class="wrapper">
       <form
@@ -302,17 +350,10 @@
           bind:value={$tournamentUrl}
           placeholder="Tournament URL"
         />
-        <input
-          type="text"
-          bind:value={$streamChannel}
-          placeholder="Stream Channel"
-        />
         <div class="button-grid top">
-          <button type="submit">Update</button>
           <button on:click={clearScores}>Clear Scores</button>
           <button on:click={swapSides}>Swap Player Sides</button>
-          <button on:click={swapCommentatorSides}>Swap Commentator Sides</button
-          >
+          <!--<button on:click={swapCommentatorSides}>Swap Commentator Sides</button>-->
           <button
             on:click={(e) => {
               e.preventDefault();
@@ -323,13 +364,13 @@
         </div>
         <div class="game-info">
           <p>Game:</p>
-          <select bind:value={gameInfo.title}>
+          <select bind:value={$gameInfo.title}>
             {#each games as game}
               <option value={game.data}>{game.name}</option>
             {/each}
           </select>
           <p>Round:</p>
-          <input type="text" bind:value={gameInfo.round} />
+          <input type="text" bind:value={$gameInfo.round} />
         </div>
         <div class="player-info">
           <div class="player-one">
@@ -343,16 +384,36 @@
                 <p>Player Name:</p>
                 <input type="text" bind:value={$players[0].playerName} />
               </div>
-              <div class="score">
-                <p>Score:</p>
-                <input type="number" bind:value={$players[0].score} />
-              </div>
               <div class="losers-bracket">
                 <p>Losers Bracket:</p>
                 <input
                   type="checkbox"
                   bind:checked={$players[0].isLosersBracket}
                 />
+              </div>
+              <div class="score">
+                <p>Score:</p>
+                <div class="score-wrapper">
+                  <div>
+                    <input type="number" bind:value={$players[0].score} />
+                  </div>
+                  <div>
+                    <button
+                      on:click={() => {
+                        updateScore($players[0].score, "+");
+                      }}
+                    >
+                      +
+                    </button>
+                    <button
+                      on:click={() => {
+                        updateScore($players[0].score, "-");
+                      }}
+                    >
+                      -
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -498,4 +559,3 @@
     margin-bottom: 20px;
   }
 </style>
-
