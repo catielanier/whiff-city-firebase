@@ -90,7 +90,7 @@
           (key) => ({
             id: key,
             scoreboardName: data[key].scoreboardName,
-          })
+          }),
         );
         scoreboards.set(scoreboardList);
       }
@@ -135,6 +135,15 @@
         Scoreboard Name:
         <input type="text" bind:value={$scoreboardName} />
       </label>
+    </div>
+    <div>
+      <button type="submit"
+        >{#if $scoreboardId}
+          Update Scoreboard
+        {:else}
+          Add Scoreboard
+        {/if}</button
+      >
     </div>
   </form>
 </div>
