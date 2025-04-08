@@ -165,15 +165,15 @@
           {
             name: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
             teamName: (set.slots[0].entrant.name =
-              set.slots[0].entrant.name.includes(" | ")
-                ? set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
+              set.slots[0].entrant.name.includes("|")
+                ? set.slots[0].entrant.name.replace(/\s*\|\s*/g, "")
                 : ""),
           },
           {
             name: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
             teamName: (set.slots[1].entrant.name =
-              set.slots[1].entrant.name.includes(" | ")
-                ? set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
+              set.slots[1].entrant.name.includes("|")
+                ? set.slots[1].entrant.name.replace(/\s*\|\s*/g, "")
                 : ""),
           },
         ],
