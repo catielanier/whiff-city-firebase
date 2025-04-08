@@ -137,13 +137,13 @@
       </label>
     </div>
     <div>
-      <button type="submit"
-        >{#if $scoreboardId}
+      <button type="submit">
+        {#if $scoreboardId}
           Update Scoreboard
         {:else}
           Add Scoreboard
-        {/if}</button
-      >
+        {/if}
+      </button>
     </div>
   </form>
 </div>
