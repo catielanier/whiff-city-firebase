@@ -56,7 +56,7 @@
     [players, commentators, gameInfo],
     ([$players, $commentators, $gameInfo]) => {
       return null;
-    }
+    },
   );
 
   const debouncedUpdate = debounce(updateScoreboard, 3000);
@@ -81,7 +81,7 @@
         },
         {
           headers: header,
-        }
+        },
       )
       .then((res) => {
         tournamentId.set(res.data.data.tournament.id);
@@ -90,7 +90,7 @@
   };
 
   const retrieveStreamQueue = (
-    shouldUpdateScoreboard: boolean = true
+    shouldUpdateScoreboard: boolean = true,
   ): void => {
     isLoading.set(true);
     axios
@@ -102,7 +102,7 @@
         },
         {
           headers: header,
-        }
+        },
       )
       .then((res) => {
         const leftPlayer: Player = {
@@ -110,15 +110,15 @@
           playerName:
             res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(
               /^.*\s\|\s/,
-              ""
+              "",
             ),
           teamName:
             res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.includes(
-              " | "
+              " | ",
             )
               ? res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(
                   /\s\|\s.*/,
-                  ""
+                  "",
                 )
               : "",
           score: 0,
@@ -130,15 +130,15 @@
           playerName:
             res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(
               /^.*\s\|\s/,
-              ""
+              "",
             ),
           teamName:
             res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.includes(
-              " | "
+              " | ",
             )
               ? res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(
                   /\s\|\s.*/,
-                  ""
+                  "",
                 )
               : "",
           score: 0,
@@ -254,10 +254,10 @@
         },
         {
           headers: header,
-        }
+        },
       )
       .then((_) =>
-        $tournamentId ? retrieveStreamQueue() : retrieveTournament()
+        $tournamentId ? retrieveStreamQueue() : retrieveTournament(),
       )
       .catch((err) => errMsg.set(err.message));
   };
@@ -296,7 +296,6 @@
         $tournamentUrl = data.tournamentUrl;
         $streamChannel = data.streamChannel;
         $isTeams = data.isTeams;
-        $tournamentUrl = 
       }
     });
   };
@@ -311,7 +310,7 @@
           (key) => ({
             id: key,
             scoreboardName: data[key].scoreboardName,
-          })
+          }),
         );
         scoreboards.set(scoreboardList);
       }
