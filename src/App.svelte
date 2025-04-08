@@ -32,6 +32,6 @@
     {/if}
     <Route exact path="/scoreboard/:id" component={Scoreboard} />
     <Route exact path="/commentators/:id" component={Commentators} />
-    <Route exact path="/queue/:id" component={StreamQueue} />
+    <Route exact path="/queue/:stream" component={StreamQueue} />
   </main>
 </Router>

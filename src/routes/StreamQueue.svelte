@@ -5,10 +5,11 @@
   import { firebase } from "../utils/firebase";
 
   let queue: QueuedMatch[] = [];
+  export let stream: string;
 
   onMount(() => {
     const db = getDatabase(firebase);
-    const queueRef = ref(db, "streamQueue");
+    const queueRef = ref(db, `/streamQueue/${stream}`);
     onValue(queueRef, (snapshot) => (queue = snapshot.val()));
   });
 </script>
@@ -16,7 +17,7 @@
 <div class="stream-queue">
   <div class="wrapper">
     <h1>Stream Queue:</h1>
-    <h3>Twitch Channel: <span>BarrieWhiffCity</span></h3>
+    <h3>Twitch Channel: <span>{stream}</span></h3>
     <div class="queue-wrapper">
       <div class="queue-header">
         <div>Position</div>
@@ -129,4 +130,3 @@
     color: #ffed97;
   }
 </style>
-
