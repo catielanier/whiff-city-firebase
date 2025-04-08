@@ -181,8 +181,8 @@
       updateInfo.streamQueue.push(match);
     });
     const db = getDatabase(firebase);
-    const reference = ref(db);
-    update(reference, updateInfo)
+    const reference = ref(db, `streamQueue/${$streamChannel}`);
+    update(reference, updateInfo.streamQueue)
       .then((_) => {
         isLoading.set(false);
       })
