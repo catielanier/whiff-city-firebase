@@ -332,7 +332,9 @@
 </script>
 
 <div class="update">
-  <Link to="/manager">Add/Edit Scoreboards</Link>
+  <div class="add-button">
+    <Link to="/manager">Add/Edit Scoreboards</Link>
+  </div>
   {#if $scoreboards.length >= 1}
     <select
       name="scoreboards"
@@ -567,5 +569,19 @@
   }
   .game-info input[type="text"] {
     margin-bottom: 20px;
+  }
+  .add-button {
+    display: inline-block;
+    padding: 15px 10px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    background-color: red;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  :global(.add-button a) {
+    color: white;
   }
 </style>
