@@ -294,6 +294,7 @@
         $tournamentUrl = data.tournamentUrl;
         $streamChannel = data.streamChannel;
         $isTeams = data.isTeams;
+        $tournamentUrl = 
       }
     });
   };

@@ -59,6 +59,7 @@ export interface Scoreboard {
   scoreboardName: string;
   streamUrl: string;
   isTeams: boolean;
+  startGGUri: string | undefined;
 }
 
 export interface Scoreboards {
