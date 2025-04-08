@@ -41,7 +41,7 @@
     if (!updateInfo.players[0].score) updateInfo.players[0].score = 0;
     if (!updateInfo.players[1].score) updateInfo.players[1].score = 0;
     const db = getDatabase(firebase);
-    const reference = ref(db);
+    const reference = ref(db, `/scoreboards/${$scoreboardId}`);
     update(reference, updateInfo)
       .then((_) => {
         isLoading.set(false);
