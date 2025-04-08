@@ -1,6 +1,11 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { Scoreboard, ScoreboardsSimple, Player } from "../utils/types";
+  import type {
+    Scoreboard,
+    ScoreboardsSimple,
+    Player,
+    Commentator,
+  } from "../utils/types";
   import { onMount } from "svelte";
   import { get, getDatabase, onValue, push, ref, set } from "firebase/database";
   import { firebase } from "../utils/firebase";
@@ -15,13 +20,25 @@
   const scoreboards = writable<ScoreboardsSimple[]>([]);
   const success = writable<boolean>(false);
   const error = writable<string | null>(null);
-  const blankPlayer: Player = {
-    id: 0,
-    teamName: "",
-    playerName: "",
-    score: 0,
-    isLosersBracket: false,
-    startId: "",
+
+  const generateSeedPlayer = (id: number): Player => {
+    return {
+      id,
+      teamName: "",
+      playerName: "",
+      score: 0,
+      isLosersBracket: false,
+      startId: "",
+    };
+  };
+
+  const generateSeedCommentator = (id: number): Commentator => {
+    return {
+      id,
+      teamName: "",
+      commentatorName: "",
+      xHandle: "",
+    };
   };
 
   const submitScoreboard = (): void => {
@@ -30,12 +47,13 @@
         scoreboardName: $scoreboardName,
         streamUrl: $streamUrl,
         isTeams: $isTeams,
-        players: [blankPlayer, blankPlayer],
-        commentators: [],
+        players: [generateSeedPlayer(0), generateSeedPlayer(1)],
+        commentators: [generateSeedCommentator(0), generateSeedCommentator(1)],
         gameInfo: {
           title: "sf6",
           round: "",
         },
+        startGGUri: "",
       };
       scoreboardData.players[1].id = 1;
       push(reference, scoreboardData)
@@ -53,6 +71,13 @@
         scoreboardName: $scoreboardName,
         streamUrl: $streamUrl,
         isTeams: $isTeams,
+        players: [generateSeedPlayer(0), generateSeedPlayer(1)],
+        commentators: [generateSeedCommentator(0), generateSeedCommentator(1)],
+        gameInfo: {
+          title: "sf6",
+          round: "",
+        },
+        startGGUri: "",
       })
         .then(() => {
           success.set(true);
@@ -99,7 +124,9 @@
 </script>
 
 <div>
-  <Link to="/" class="back-button">Back</Link>
+  <div class="back-button">
+    <Link to="/">Back</Link>
+  </div>
   {#if $success}
     <p class="success">Scoreboard updated successfully!</p>
   {:else if $error}
@@ -156,9 +183,11 @@
     top: 10px;
     left: 10px;
     text-decoration: none;
-    color: #007bff;
-    background-color: #f8f9fa;
+    background-color: red;
     border-radius: 5px;
     font-weight: bold;
+  }
+  :global(.back-button a) {
+    color: white;
   }
 </style>

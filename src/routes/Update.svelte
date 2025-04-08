@@ -293,12 +293,12 @@
     onValue(reference, (res) => {
       const data = res.val();
       if (data) {
-        $players = data.players;
-        $commentators = data.commentators;
-        $gameInfo = data.gameInfo;
-        $tournamentUrl = data.tournamentUrl;
-        $streamChannel = data.streamChannel;
-        $isTeams = data.isTeams;
+        players.set(data.players);
+        commentators.set(data.commentators);
+        gameInfo.set(data.gameInfo);
+        tournamentUrl.set(data.tournamentUrl);
+        streamChannel.set(data.streamChannel);
+        isTeams.set(data.isTeams);
       }
     });
   };
@@ -316,7 +316,6 @@
             scoreboardName: data[key].scoreboardName,
           }),
         );
-        console.log(scoreboards);
         scoreboards.set(scoreboardList);
       } else {
         scoreboards.set([]);
@@ -348,7 +347,7 @@
   {:else if $scoreboards.length === 0}
     <p class="error">No scoreboards found. Please create a scoreboard first.</p>
   {/if}
-  {#if $players?.length && $commentators?.length && gameInfo}
+  {#if $players.length && $commentators.length && $gameInfo}
     <div class="wrapper">
       <form
         on:submit={(e) => {
