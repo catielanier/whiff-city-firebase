@@ -363,8 +363,6 @@
           placeholder="Tournament URL"
         />
         <div class="button-grid top">
-          <button on:click={clearScores}>Clear Scores</button>
-          <button on:click={swapSides}>Swap Player Sides</button>
           <!--<button on:click={swapCommentatorSides}>Swap Commentator Sides</button>-->
           <button
             on:click={(e) => {
@@ -388,20 +386,22 @@
           <div class="player-one">
             <p>Left Player:</p>
             <div class="player-one-wrapper">
-              <div class="team">
-                <p>Team:</p>
-                <input type="text" bind:value={$players[0].teamName} />
-              </div>
-              <div class="player-name">
-                <p>Player Name:</p>
-                <input type="text" bind:value={$players[0].playerName} />
-              </div>
-              <div class="losers-bracket">
-                <p>Losers Bracket:</p>
-                <input
-                  type="checkbox"
-                  bind:checked={$players[0].isLosersBracket}
-                />
+              <div class="player-info-wrapper">
+                <div class="team">
+                  <p>Team:</p>
+                  <input type="text" bind:value={$players[0].teamName} />
+                </div>
+                <div class="player-name">
+                  <p>Player Name:</p>
+                  <input type="text" bind:value={$players[0].playerName} />
+                </div>
+                <div class="losers-bracket">
+                  <p>Losers Bracket:</p>
+                  <input
+                    type="checkbox"
+                    bind:checked={$players[0].isLosersBracket}
+                  />
+                </div>
               </div>
               <div class="score">
                 <p>Score:</p>
@@ -411,6 +411,7 @@
                   </div>
                   <div>
                     <button
+                      class="plus"
                       on:click={() => {
                         updateScore($players[0].score, "+");
                       }}
@@ -418,6 +419,7 @@
                       +
                     </button>
                     <button
+                      class="minus"
                       on:click={() => {
                         updateScore($players[0].score, "-");
                       }}
@@ -429,27 +431,55 @@
               </div>
             </div>
           </div>
+          <div class="control-buttons">
+            <button on:click={clearScores}>Clear Scores</button>
+            <button on:click={swapSides}>Swap Player Sides</button>
+          </div>
           <div class="player-two">
             <p>Right Player:</p>
             <div class="player-two-wrapper">
-              <div class="team">
-                <p>Team:</p>
-                <input type="text" bind:value={$players[1].teamName} />
-              </div>
-              <div class="player-name">
-                <p>Player Name:</p>
-                <input type="text" bind:value={$players[1].playerName} />
+              <div class="player-info wrapper">
+                <div class="team">
+                  <p>Team:</p>
+                  <input type="text" bind:value={$players[1].teamName} />
+                </div>
+                <div class="player-name">
+                  <p>Player Name:</p>
+                  <input type="text" bind:value={$players[1].playerName} />
+                </div>
+                <div class="losers-bracket">
+                  <p>Losers Bracket:</p>
+                  <input
+                    type="checkbox"
+                    bind:checked={$players[1].isLosersBracket}
+                  />
+                </div>
               </div>
               <div class="score">
                 <p>Score:</p>
-                <input type="number" bind:value={$players[1].score} />
-              </div>
-              <div class="losers-bracket">
-                <p>Losers Bracket:</p>
-                <input
-                  type="checkbox"
-                  bind:checked={$players[1].isLosersBracket}
-                />
+                <div class="score-wrapper">
+                  <div>
+                    <input type="number" bind:value={$players[1].score} />
+                  </div>
+                  <div>
+                    <button
+                      class="plus"
+                      on:click={() => {
+                        updateScore($players[1].score, "+");
+                      }}
+                    >
+                      +
+                    </button>
+                    <button
+                      class="minus"
+                      on:click={() => {
+                        updateScore($players[0].score, "-");
+                      }}
+                    >
+                      -
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -547,7 +577,51 @@
 
   .player-one-wrapper,
   .player-two-wrapper {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 4fr 1fr;
+  }
+
+  .score-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .score-wrapper input {
+    font-size: 2.1rem;
+    max-width: 2.7rem;
+    padding: 20px 15px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+    border: 1px solid red;
+    text-align: center;
+  }
+
+  .score-wrapper input::-moz-outer-spin-button,
+  .score-wrapper input::-moz-inner-spin-button {
+    display: none;
+  }
+
+  .score-wrapper input::-webkit-outer-spin-button,
+  .score-wrapper input::-webkit-inner-spin-button {
+    display: none;
+  }
+
+  .score-wrapper button {
+    height: 40px;
+    width: 40px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 0;
+    text-align: center;
+    color: black;
+  }
+
+  .score-wrapper button.minus {
+    background: yellow;
+  }
+
+  .score-wrapper button.plus {
+    background: green;
   }
 
   .commentator-one-wrapper,
