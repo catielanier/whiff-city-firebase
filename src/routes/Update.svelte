@@ -15,6 +15,7 @@
   import axios from "axios";
   import { streamQueueQuery, tournamentQuery } from "../utils/gqlQueries";
   import debounce from "debounce";
+  import { Link } from "svelte-routing";
 
   const players = writable<Player[]>([]);
   const commentators = writable<Commentator[]>([]);
@@ -62,7 +63,9 @@
   const debouncedUpdate = debounce(updateScoreboard, 3000);
 
   combined.subscribe(() => {
-    debouncedUpdate();
+    if ($players && $players.length >= 2) {
+      debouncedUpdate();
+    }
   });
 
   const generateSlug = (): string => {
@@ -303,6 +306,7 @@
   onMount(async () => {
     const database = getDatabase(firebase);
     const reference = ref(database, "/scoreboards");
+    isLoading.set(true);
     get(reference).then((res) => {
       const data = res.val();
       if (data) {
@@ -312,8 +316,12 @@
             scoreboardName: data[key].scoreboardName,
           }),
         );
+        console.log(scoreboards);
         scoreboards.set(scoreboardList);
+      } else {
+        scoreboards.set([]);
       }
+      isLoading.set(false);
     });
   });
 
@@ -325,7 +333,8 @@
 </script>
 
 <div class="update">
-  {#if $scoreboards?.length}
+  <Link to="/manager">Add/Edit Scoreboards</Link>
+  {#if $scoreboards.length >= 1}
     <select
       name="scoreboards"
       bind:value={$scoreboardId}
@@ -336,7 +345,7 @@
         <option value={scoreboard.id}>{scoreboard.scoreboardName}</option>
       {/each}
     </select>
-  {:else if !$scoreboards?.length && !isLoading}
+  {:else if $scoreboards.length === 0}
     <p class="error">No scoreboards found. Please create a scoreboard first.</p>
   {/if}
   {#if $players?.length && $commentators?.length && gameInfo}
