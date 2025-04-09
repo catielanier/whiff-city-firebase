@@ -374,16 +374,48 @@
     <Link to="/manager">Add/Edit Scoreboards</Link>
   </div>
   {#if $scoreboards.length >= 1}
-    <select
-      name="scoreboards"
-      bind:value={$scoreboardId}
-      on:change={getScoreboard}
-    >
-      <option value="" disabled selected>Select a scoreboard</option>
-      {#each $scoreboards as scoreboard}
-        <option value={scoreboard.id}>{scoreboard.scoreboardName}</option>
-      {/each}
-    </select>
+    <div class="menu-wrapper">
+      <div class="menu">
+        <p>Select a scoreboard:</p>
+        <select
+          name="scoreboards"
+          bind:value={$scoreboardId}
+          on:change={getScoreboard}
+        >
+          <option value="" disabled selected>Select a scoreboard</option>
+          {#each $scoreboards as scoreboard}
+            <option value={scoreboard.id}>{scoreboard.scoreboardName}</option>
+          {/each}
+        </select>
+        {#if $scoreboardId}
+          <p>Tournament URL:</p>
+          <input
+            type="text"
+            bind:value={$tournamentUrl}
+            placeholder="Tournament URL"
+          />
+          <p>Game:</p>
+          <select bind:value={$gameInfo.title}>
+            {#each games as game}
+              <option value={game.data}>{game.name}</option>
+            {/each}
+          </select>
+          <p>Round:</p>
+          <input type="text" bind:value={$gameInfo.round} class="round" />
+        {/if}
+      </div>
+      {#if $scoreboardId}
+        <div class="menu-controls">
+          <button
+            on:click={(e) => {
+              e.preventDefault();
+              !tournamentId ? retrieveTournament() : retrieveStreamQueue();
+            }}>Retrieve Stream Queue</button
+          >
+          <button on:click={submitResults}>Submit Match Results</button>
+        </div>
+      {/if}
+    </div>
   {:else if $scoreboards.length === 0}
     <p class="error">No scoreboards found. Please create a scoreboard first.</p>
   {/if}
@@ -395,31 +427,6 @@
           updateScoreboard();
         }}
       >
-        <input
-          type="text"
-          bind:value={$tournamentUrl}
-          placeholder="Tournament URL"
-        />
-        <div class="button-grid top">
-          <!--<button on:click={swapCommentatorSides}>Swap Commentator Sides</button>-->
-          <button
-            on:click={(e) => {
-              e.preventDefault();
-              !tournamentId ? retrieveTournament() : retrieveStreamQueue();
-            }}>Retrieve Stream Queue</button
-          >
-          <button on:click={submitResults}>Submit Match Results</button>
-        </div>
-        <div class="game-info">
-          <p>Game:</p>
-          <select bind:value={$gameInfo.title}>
-            {#each games as game}
-              <option value={game.data}>{game.name}</option>
-            {/each}
-          </select>
-          <p>Round:</p>
-          <input type="text" bind:value={$gameInfo.round} class="round" />
-        </div>
         <h3>Players:</h3>
         <div class="players-wrapper">
           <div class="player-one">
@@ -750,5 +757,18 @@
   }
   :global(.add-button a) {
     color: white;
+  }
+  .menu-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+  }
+  .menu-wrapper select {
+    margin-bottom: 5px;
+  }
+  .menu-wrapper button {
+    margin-top: 35px;
+    background: #c065ff;
+    width: 100%;
   }
 </style>
