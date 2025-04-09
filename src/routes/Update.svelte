@@ -341,10 +341,15 @@
         commentators.set(data.commentators);
         gameInfo.set(data.gameInfo);
         tournamentUrl.set(data.tournamentUrl);
-        streamChannel.set(data.streamChannel);
+        streamChannel.set(data.streamUrl);
         isTeams.set(data.isTeams);
       }
     });
+  };
+
+  const openStreamQueue = (e: Event): void => {
+    e.preventDefault();
+    window.open(`${window.location.origin}/queue/${$streamChannel}`);
   };
 
   onMount(async () => {
@@ -419,6 +424,7 @@
             }}>Retrieve Stream Queue</button
           >
           <button on:click={submitResults}>Submit Match Results</button>
+          <button on:click={openStreamQueue}>Launch Stream Queue</button>
         </div>
       {/if}
     </div>
