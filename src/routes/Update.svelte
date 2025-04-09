@@ -287,14 +287,16 @@
     e.preventDefault();
     const oldLeft: Player = { ...$players[0] };
     const oldRight: Player = { ...$players[1] };
-    const oldLeftTeammates: string[] = $leftTeammates;
-    const oldRightTeammates: string[] = $rightTeammates;
     oldLeft.id = 2;
     oldRight.id = 1;
     $players[0] = oldRight;
     $players[1] = oldLeft;
-    leftTeammates.set(oldRightTeammates);
-    rightTeammates.set(oldLeftTeammates);
+    if ($isTeams) {
+      const oldLeftTeammates: string[] = $leftTeammates;
+      const oldRightTeammates: string[] = $rightTeammates;
+      leftTeammates.set(oldRightTeammates);
+      rightTeammates.set(oldLeftTeammates);
+    }
     updateScoreboard();
   };
 
@@ -421,7 +423,7 @@
                   <div class="teammates">
                     <p>Teammates:</p>
                     <textarea
-                      bind:value={$leftTeammates}
+                      bind:value={leftText}
                       on:change={() => {
                         handleInput(leftTeammates);
                       }}
@@ -484,7 +486,7 @@
                   <div class="teammates">
                     <p>Teammates:</p>
                     <textarea
-                      bind:value={$rightTeammates}
+                      bind:value={rightText}
                       on:change={() => {
                         handleInput(rightTeammates);
                       }}

@@ -29,6 +29,7 @@
       score: 0,
       isLosersBracket: false,
       startId: "",
+      teammates: $isTeams ? [] : undefined,
     };
   };
 
