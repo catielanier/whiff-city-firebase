@@ -418,8 +418,9 @@
             {/each}
           </select>
           <p>Round:</p>
-          <input type="text" bind:value={$gameInfo.round} />
+          <input type="text" bind:value={$gameInfo.round} class="round" />
         </div>
+        <h3>Players:</h3>
         <div class="players-wrapper">
           <div class="player-one">
             <div class="player-one-wrapper">
@@ -550,6 +551,7 @@
             </div>
           </div>
         </div>
+        <h3>Commentators:</h3>
         <div class="commentator-info">
           <div class="commentator-one">
             <p>Left Commentator:</p>
@@ -570,6 +572,9 @@
                 <input type="text" bind:value={$commentators[0].xHandle} />
               </div>
             </div>
+          </div>
+          <div class="control-buttons">
+            <button on:click={swapCommentatorSides}>Swap Sides</button>
           </div>
           <div class="commentator-two">
             <p>Right Commentator:</p>
@@ -598,6 +603,9 @@
 </div>
 
 <style>
+  .round {
+    margin-bottom: 0 !important;
+  }
   .update {
     text-align: left;
     max-width: 720px;
@@ -625,10 +633,13 @@
   p {
     margin: 0;
   }
+  .commentator-info {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 1.7fr 1fr 1.7fr;
+  }
   .player-one-wrapper,
-  .player-two-wrapper,
-  .commentator-one-wrapper,
-  .commentator-two-wrapper {
+  .player-two-wrapper {
     display: grid;
     grid-gap: 5px;
     grid-template-columns: 1fr 1fr;
@@ -659,6 +670,7 @@
   .score-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    margin-top: 20px;
   }
 
   .score-wrapper input {
@@ -670,6 +682,7 @@
     appearance: none;
     border: 1px solid red;
     text-align: center;
+    border-radius: 5px;
   }
 
   .score-wrapper input::-moz-outer-spin-button,
@@ -709,10 +722,6 @@
     width: 100%;
   }
 
-  .commentator-one-wrapper,
-  .commentator-two-wrapper {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
   .button-grid {
     margin-top: 20px;
     display: grid;
