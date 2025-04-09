@@ -53,6 +53,12 @@
     rightText = arr.join("\n");
   });
 
+  const copyScene = (scene: string): void => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/${scene}/${$scoreboardId}`,
+    );
+  };
+
   const updateScoreboard = async (): Promise<void> => {
     isLoading.set(true);
     const updateInfo: UpdateData = {
@@ -494,6 +500,11 @@
           <div class="control-buttons">
             <button on:click={clearScores}>Clear Scores</button>
             <button on:click={swapSides}>Swap Sides</button>
+            <button
+              on:click={() => {
+                copyScene("players");
+              }}>Copy Scene</button
+            >
           </div>
           <div class="player-two">
             <div class="player-two-wrapper">
@@ -582,6 +593,11 @@
           </div>
           <div class="control-buttons">
             <button on:click={swapCommentatorSides}>Swap Sides</button>
+            <button
+              on:click={() => {
+                copyScene("commentators");
+              }}>Copy Scene</button
+            >
           </div>
           <div class="commentator-two">
             <p>Right Commentator:</p>
