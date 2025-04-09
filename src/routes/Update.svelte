@@ -508,7 +508,7 @@
             <button on:click={swapSides}>Swap Sides</button>
             <button
               on:click={() => {
-                copyScene("players");
+                copyScene("scoreboard");
               }}>Copy Scene</button
             >
           </div>
