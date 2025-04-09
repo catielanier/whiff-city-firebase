@@ -60,6 +60,7 @@ export interface Scoreboard {
   streamUrl: string;
   isTeams: boolean;
   startGGUri: string | undefined;
+  teammates: string[] | undefined;
 }
 
 export interface Scoreboards {

@@ -9,7 +9,7 @@
     ScoreboardsSimple,
   } from "../utils/types";
   import { getDatabase, ref, onValue, get, update } from "firebase/database";
-  import { derived, writable } from "svelte/store";
+  import { derived, writable, type Writable } from "svelte/store";
   import { firebase } from "../utils/firebase";
   import { games, header } from "../utils/data";
   import axios from "axios";
@@ -28,9 +28,27 @@
   const tournamentId = writable<string>("");
   const currentSetId = writable<string>("");
   const streamChannel = writable<string>("");
+  const leftTeammates = writable<string[]>([]);
+  const rightTeammates = writable<string[]>([]);
+
+  let leftText: string = "";
+  let rightText: string = "";
 
   const isLoading = writable<boolean>(false);
   const errMsg = writable<string | null>(null);
+
+  const handleInput = (variable: Writable<string[]>): void => {
+    const arr = text.split("\n");
+    variable.set(arr);
+  };
+
+  leftTeammates.subscribe((arr) => {
+    leftText = arr.join("\n");
+  });
+
+  rightTeammates.subscribe((arr) => {
+    rightText = arr.join("\n");
+  });
 
   const updateScoreboard = async (): Promise<void> => {
     isLoading.set(true);
@@ -269,10 +287,14 @@
     e.preventDefault();
     const oldLeft: Player = { ...$players[0] };
     const oldRight: Player = { ...$players[1] };
+    const oldLeftTeammates: string[] = $leftTeammates;
+    const oldRightTeammates: string[] = $rightTeammates;
     oldLeft.id = 2;
     oldRight.id = 1;
     $players[0] = oldRight;
     $players[1] = oldLeft;
+    leftTeammates.set(oldRightTeammates);
+    rightTeammates.set(oldLeftTeammates);
     updateScoreboard();
   };
 
@@ -395,6 +417,12 @@
                   <p>Player Name:</p>
                   <input type="text" bind:value={$players[0].playerName} />
                 </div>
+                {#if $isTeams}
+                  <div class="teammates"></div>
+                    <p>Teammates:</p>
+                    <textarea bind:value={$leftTeammates} on:change={() => { handleInput(leftTeammates) }} />
+                  </div>
+                {/if}
                 <div class="losers-bracket">
                   <p>Losers Bracket:</p>
                   <input
@@ -447,6 +475,12 @@
                   <p>Player Name:</p>
                   <input type="text" bind:value={$players[1].playerName} />
                 </div>
+                {#if $isTeams}
+                  <div class="teammates"></div>
+                    <p>Teammates:</p>
+                    <textarea bind:value={$rightTeammates} on:change={() => { handleInput(rightTeammates) }} />
+                  </div>
+                {/if}
                 <div class="losers-bracket">
                   <p>Losers Bracket:</p>
                   <input
