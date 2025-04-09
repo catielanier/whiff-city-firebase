@@ -229,8 +229,17 @@
     updateScoreboard();
   };
 
-  const updateScore = (variable: number, operand: "+" | "-"): void => {
-    variable = operand === "+" ? (variable += 1) : (variable -= 1);
+  const updateScore = (side: string, operand: "+" | "-"): void => {
+    switch (side) {
+      case "left":
+        if (operand === "+") $players[0].score++;
+        else $players[0].score--;
+        break;
+      case "right":
+        if (operand === "+") $players[1].score++;
+        else $players[1].score--;
+        break;
+    }
   };
 
   const submitResults = (e: Event): void => {
@@ -457,7 +466,7 @@
                     <button
                       class="plus"
                       on:click={() => {
-                        updateScore($players[0].score, "+");
+                        updateScore("left", "+");
                       }}
                     >
                       +
@@ -465,7 +474,7 @@
                     <button
                       class="minus"
                       on:click={() => {
-                        updateScore($players[0].score, "-");
+                        updateScore("left", "-");
                       }}
                     >
                       -
@@ -524,7 +533,7 @@
                     <button
                       class="plus"
                       on:click={() => {
-                        updateScore($players[1].score, "+");
+                        updateScore("right", "+");
                       }}
                     >
                       +
@@ -532,7 +541,7 @@
                     <button
                       class="minus"
                       on:click={() => {
-                        updateScore($players[1].score, "-");
+                        updateScore("right", "-");
                       }}
                     >
                       -
