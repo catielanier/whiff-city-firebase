@@ -420,11 +420,10 @@
           <p>Round:</p>
           <input type="text" bind:value={$gameInfo.round} />
         </div>
-        <div class="player-info">
+        <div class="players-wrapper">
           <div class="player-one">
-            <p>Left Player:</p>
             <div class="player-one-wrapper">
-              <div class="player-info-wrapper">
+              <div class="player-info wrapper">
                 <div class="team">
                   <p>Team:</p>
                   <input type="text" bind:value={$players[0].teamName} />
@@ -486,10 +485,9 @@
           </div>
           <div class="control-buttons">
             <button on:click={clearScores}>Clear Scores</button>
-            <button on:click={swapSides}>Swap Player Sides</button>
+            <button on:click={swapSides}>Swap Sides</button>
           </div>
           <div class="player-two">
-            <p>Right Player:</p>
             <div class="player-two-wrapper">
               <div class="player-info wrapper">
                 <div class="team">
@@ -594,13 +592,6 @@
             </div>
           </div>
         </div>
-        <div class="button-grid">
-          <button type="submit">Update</button>
-          <button on:click={clearScores}>Clear Scores</button>
-          <button on:click={swapSides}>Swap Player Sides</button>
-          <button on:click={swapCommentatorSides}>Swap Commentator Sides</button
-          >
-        </div>
       </form>
     </div>
   {/if}
@@ -620,14 +611,17 @@
   }
   .player-two,
   .commentator-two {
-    margin-top: 15px;
     padding: 10px;
     border-radius: 5px;
     border: 2px solid #235ba8;
   }
-  .player-info {
+  .players-wrapper {
     margin-bottom: 20px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 1fr 1fr 1fr;
   }
+
   p {
     margin: 0;
   }
@@ -637,6 +631,20 @@
   .commentator-two-wrapper {
     display: grid;
     grid-gap: 5px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .player-one-wrapper .player-info,
+  .player-two-wrapper .player-info {
+    width: 105px;
+    margin-right: 15px;
+  }
+  .player-one-wrapper .player-info input,
+  .player-two-wrapper .player-info input {
+    width: 100%;
+  }
+  input[type="number"] {
+    margin-right: 5px;
   }
 
   .losers-bracket {
@@ -691,6 +699,15 @@
   .score-wrapper button.plus {
     background: green;
   }
+  .control-buttons {
+    margin: 20px 10px;
+  }
+
+  .control-buttons button {
+    margin-top: 15px;
+    background: #c065ff;
+    width: 100%;
+  }
 
   .commentator-one-wrapper,
   .commentator-two-wrapper {
@@ -700,7 +717,6 @@
     margin-top: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
     grid-gap: 15px;
   }
   .button-grid.top {
