@@ -37,8 +37,11 @@
   const isLoading = writable<boolean>(false);
   const errMsg = writable<string | null>(null);
 
-  const handleInput = (variable: Writable<string[]>): void => {
-    const arr = text.split("\n");
+  const handleInput = (
+    variable: Writable<string[]>,
+    textInput: string,
+  ): void => {
+    const arr = textInput.split("\n");
     variable.set(arr);
   };
 
@@ -425,7 +428,7 @@
                     <textarea
                       bind:value={leftText}
                       on:change={() => {
-                        handleInput(leftTeammates);
+                        handleInput(leftTeammates, leftText);
                       }}
                     />
                   </div>
@@ -492,7 +495,7 @@
                     <textarea
                       bind:value={rightText}
                       on:change={() => {
-                        handleInput(rightTeammates);
+                        handleInput(rightTeammates, rightText);
                       }}
                     />
                   </div>
