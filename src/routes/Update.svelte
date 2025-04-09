@@ -442,7 +442,11 @@
                 <p>Score:</p>
                 <div class="score-wrapper">
                   <div>
-                    <input type="number" bind:value={$players[0].score} />
+                    <input
+                      type="number"
+                      min="0"
+                      bind:value={$players[0].score}
+                    />
                   </div>
                   <div>
                     <button
@@ -505,7 +509,11 @@
                 <p>Score:</p>
                 <div class="score-wrapper">
                   <div>
-                    <input type="number" bind:value={$players[1].score} />
+                    <input
+                      type="number"
+                      min="0"
+                      bind:value={$players[1].score}
+                    />
                   </div>
                   <div>
                     <button
@@ -519,7 +527,7 @@
                     <button
                       class="minus"
                       on:click={() => {
-                        updateScore($players[0].score, "-");
+                        updateScore($players[1].score, "-");
                       }}
                     >
                       -
