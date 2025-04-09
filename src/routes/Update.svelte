@@ -418,9 +418,14 @@
                   <input type="text" bind:value={$players[0].playerName} />
                 </div>
                 {#if $isTeams}
-                  <div class="teammates"></div>
+                  <div class="teammates">
                     <p>Teammates:</p>
-                    <textarea bind:value={$leftTeammates} on:change={() => { handleInput(leftTeammates) }} />
+                    <textarea
+                      bind:value={$leftTeammates}
+                      on:change={() => {
+                        handleInput(leftTeammates);
+                      }}
+                    />
                   </div>
                 {/if}
                 <div class="losers-bracket">
@@ -476,9 +481,14 @@
                   <input type="text" bind:value={$players[1].playerName} />
                 </div>
                 {#if $isTeams}
-                  <div class="teammates"></div>
+                  <div class="teammates">
                     <p>Teammates:</p>
-                    <textarea bind:value={$rightTeammates} on:change={() => { handleInput(rightTeammates) }} />
+                    <textarea
+                      bind:value={$rightTeammates}
+                      on:change={() => {
+                        handleInput(rightTeammates);
+                      }}
+                    />
                   </div>
                 {/if}
                 <div class="losers-bracket">
