@@ -568,7 +568,7 @@
                 <input type="text" bind:value={$commentators[0].teamName} />
               </div>
               <div class="commentator-name">
-                <p>Player Name:</p>
+                <p>Commentator Name:</p>
                 <input
                   type="text"
                   bind:value={$commentators[0].commentatorName}
@@ -591,7 +591,7 @@
                 <input type="text" bind:value={$commentators[1].teamName} />
               </div>
               <div class="commentator-name">
-                <p>Player Name:</p>
+                <p>Commentator Name:</p>
                 <input
                   type="text"
                   bind:value={$commentators[1].commentatorName}
