@@ -726,22 +726,11 @@
   .control-buttons button {
     margin-top: 15px;
     background: #c065ff;
+    color: #280137;
     width: 100%;
   }
 
-  .button-grid {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 15px;
-  }
-  .button-grid.top {
-    margin-bottom: 20px;
-  }
   select {
-    margin-bottom: 20px;
-  }
-  .game-info input[type="text"] {
     margin-bottom: 20px;
   }
   .add-button {
@@ -769,6 +758,7 @@
   .menu-wrapper button {
     margin-top: 35px;
     background: #c065ff;
+    color: #280137;
     width: 100%;
   }
 </style>
