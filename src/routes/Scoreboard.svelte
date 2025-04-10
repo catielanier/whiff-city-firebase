@@ -7,6 +7,7 @@
   export let id: string;
   let players: Player[];
   let gameInfo: GameInfo;
+  let isTeams: boolean = false;
 
   onMount(() => {
     const database = getDatabase(firebase);
@@ -15,6 +16,7 @@
       const data = res.val();
       players = data.players;
       gameInfo = data.gameInfo;
+      isTeams = data.isTeams;
     });
   });
 </script>
@@ -56,6 +58,24 @@
         </div>
       </div>
     </div>
+    {#if isTeams && players[0].teammates && players[1].teammates}
+      <div class="left-team team">
+        <h4>Teammates:</h4>
+        {#each players[0].teammates as player}
+          <p class="player {player.isEliminated && 'eliminated'}">
+            {player.name || "&nbsp;"}
+          </p>
+        {/each}
+      </div>
+      <div class="right-team team">
+        <h4>Teammates:</h4>
+        {#each players[1].teammates as player}
+          <p class="player {player.isEliminated && 'eliminated'}">
+            {player.name || "&nbsp;"}
+          </p>
+        {/each}
+      </div>
+    {/if}
   </div>
 {/if}
 
@@ -64,7 +84,7 @@
   .scoreboard {
     max-width: 1700px;
     width: 100%;
-    height: 80px;
+    height: 500px;
     font-family: "Audiowide", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -228,5 +248,29 @@
 
   .right-player.gbvs .player-info {
     margin-left: 215px;
+  }
+
+  .team {
+    background: #eb0405;
+    color: #fff;
+    width: 150px;
+    font-size: 1.2rem;
+    position: absolute;
+    top: 120px;
+  }
+  .team h4,
+  .team p {
+    margin: 0;
+    padding: 0;
+  }
+  .left-team {
+    left: 0;
+  }
+  .right-team {
+    right: -80px;
+  }
+  .team p.eliminated {
+    text-decoration: line-through;
+    color: #ccc;
   }
 </style>
