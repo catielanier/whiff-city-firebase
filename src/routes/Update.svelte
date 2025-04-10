@@ -7,9 +7,10 @@
     GameInfo,
     QueuedMatch,
     ScoreboardsSimple,
+    Teammate,
   } from "../utils/types";
   import { getDatabase, ref, onValue, get, update } from "firebase/database";
-  import { derived, writable, type Writable } from "svelte/store";
+  import { derived, writable } from "svelte/store";
   import { firebase } from "../utils/firebase";
   import { games, header } from "../utils/data";
   import axios from "axios";
@@ -31,27 +32,8 @@
   const leftTeammates = writable<string[]>([]);
   const rightTeammates = writable<string[]>([]);
 
-  let leftText: string = "";
-  let rightText: string = "";
-
   const isLoading = writable<boolean>(false);
   const errMsg = writable<string | null>(null);
-
-  const handleInput = (
-    variable: Writable<string[]>,
-    textInput: string,
-  ): void => {
-    const arr = textInput.split("\n");
-    variable.set(arr);
-  };
-
-  leftTeammates.subscribe((arr) => {
-    leftText = arr.join("\n");
-  });
-
-  rightTeammates.subscribe((arr) => {
-    rightText = arr.join("\n");
-  });
 
   const copyScene = (scene: string): void => {
     navigator.clipboard.writeText(
@@ -119,6 +101,62 @@
         tournamentId.set(res.data.data.tournament.id);
         retrieveStreamQueue();
       });
+  };
+
+  const rotateTeammates = (side: string): void => {
+    let prevPlayer: Teammate | undefined;
+    switch (side) {
+      case "left":
+        prevPlayer = {
+          name: $players[0].playerName,
+          isEliminated: false,
+        };
+        $players[0].teammates?.push(prevPlayer);
+        $players[0].playerName = $players[0].teammates
+          ? $players[0].teammates[0].name
+          : "";
+        $leftTeammates.shift();
+        break;
+      case "right":
+        prevPlayer = {
+          name: $players[1].playerName,
+          isEliminated: false,
+        };
+        $players[1].teammates?.push(prevPlayer);
+        $players[1].playerName = $players[1].teammates
+          ? $players[1].teammates[0].name
+          : "";
+        $rightTeammates.shift();
+        break;
+    }
+  };
+
+  const eliminatePlayer = (side: string): void => {
+    let prevPlayer: Teammate | undefined;
+    switch (side) {
+      case "left":
+        prevPlayer = {
+          name: $players[0].playerName,
+          isEliminated: true,
+        };
+        $players[0].teammates?.push(prevPlayer);
+        $players[0].playerName = $players[0].teammates
+          ? $players[0].teammates[0].name
+          : "";
+        $leftTeammates.shift();
+        break;
+      case "right":
+        prevPlayer = {
+          name: $players[1].playerName,
+          isEliminated: true,
+        };
+        $players[1].teammates?.push(prevPlayer);
+        $players[1].playerName = $players[1].teammates
+          ? $players[1].teammates[0].name
+          : "";
+        $rightTeammates.shift();
+        break;
+    }
   };
 
   const retrieveStreamQueue = (
@@ -452,15 +490,12 @@
                   <p>Player Name:</p>
                   <input type="text" bind:value={$players[0].playerName} />
                 </div>
-                {#if $isTeams}
+                {#if $isTeams && $players[0].teammates?.length}
                   <div class="teammates">
                     <p>Teammates:</p>
-                    <textarea
-                      bind:value={leftText}
-                      on:change={() => {
-                        handleInput(leftTeammates, leftText);
-                      }}
-                    />
+                    {#each $players[0].teammates as teammate}
+                      <input type="text" bind:value={teammate.name} />
+                    {/each}
                   </div>
                 {/if}
                 <div class="losers-bracket">
@@ -480,8 +515,16 @@
                       min="0"
                       bind:value={$players[0].score}
                     />
+                    {#if $isTeams}
+                      <button on:click={() => rotateTeammates("left")}>
+                        Rotate
+                      </button>
+                      <button on:click={() => eliminatePlayer("left")}>
+                        Eliminate
+                      </button>
+                    {/if}
                   </div>
-                  <div>
+                  <div class="number-buttons">
                     <button
                       class="plus"
                       on:click={() => {
@@ -523,15 +566,12 @@
                   <p>Player Name:</p>
                   <input type="text" bind:value={$players[1].playerName} />
                 </div>
-                {#if $isTeams}
+                {#if $isTeams && $players[1].teammates?.length}
                   <div class="teammates">
                     <p>Teammates:</p>
-                    <textarea
-                      bind:value={rightText}
-                      on:change={() => {
-                        handleInput(rightTeammates, rightText);
-                      }}
-                    />
+                    {#each $players[1].teammates as teammate}
+                      <input type="text" bind:value={teammate.name} />
+                    {/each}
                   </div>
                 {/if}
                 <div class="losers-bracket">
@@ -551,8 +591,16 @@
                       min="0"
                       bind:value={$players[1].score}
                     />
+                    {#if $isTeams}
+                      <button on:click={() => rotateTeammates("left")}>
+                        Rotate
+                      </button>
+                      <button on:click={() => eliminatePlayer("left")}>
+                        Eliminate
+                      </button>
+                    {/if}
                   </div>
-                  <div>
+                  <div class="number-buttons">
                     <button
                       class="plus"
                       on:click={() => {
@@ -724,7 +772,7 @@
     display: none;
   }
 
-  .score-wrapper button {
+  .score-wrapper .number-buttons button {
     height: 40px;
     width: 40px;
     font-size: 1.3rem;
@@ -732,6 +780,17 @@
     padding: 0;
     text-align: center;
     color: black;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  .score-wrapper button {
+    width: 100%;
+    font-size: 0.9rem;
+    background: #c065ff;
+    color: #280137;
+    margin-bottom: 5px;
+    margin-top: 5px;
   }
 
   .score-wrapper button.minus {

@@ -5,6 +5,7 @@
     ScoreboardsSimple,
     Player,
     Commentator,
+    Teammate,
   } from "../utils/types";
   import { onMount } from "svelte";
   import { get, getDatabase, onValue, push, ref, set } from "firebase/database";
@@ -16,6 +17,7 @@
   const streamUrl = writable<string>("");
   const scoreboardName = writable<string>("");
   const isTeams = writable<boolean>(false);
+  const numberOfTeammates = writable<number>(0);
   const scoreboardId = writable<string | undefined>(undefined);
   const scoreboards = writable<ScoreboardsSimple[]>([]);
   const success = writable<boolean>(false);
@@ -29,8 +31,19 @@
       score: 0,
       isLosersBracket: false,
       startId: "",
-      teammates: $isTeams ? [] : undefined,
+      teammates: $isTeams ? [...generateSeedTeammate()] : undefined,
     };
+  };
+
+  const generateSeedTeammate = (): Teammate[] => {
+    const teammates = [];
+    for (let i = 1; i < $numberOfTeammates; i++) {
+      teammates.push({
+        name: "",
+        isEliminated: false,
+      });
+    }
+    return teammates;
   };
 
   const generateSeedCommentator = (id: number): Commentator => {
@@ -158,6 +171,14 @@
         <input type="text" bind:value={$streamUrl} />
       </label>
     </div>
+    {#if $isTeams}
+      <div>
+        <label
+          ># of Teammates
+          <input type="number" bind:value={$numberOfTeammates} />
+        </label>
+      </div>
+    {/if}
     <div>
       <label>
         Scoreboard Name:

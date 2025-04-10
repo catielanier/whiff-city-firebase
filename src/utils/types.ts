@@ -5,6 +5,7 @@ export interface Player {
   score: number;
   isLosersBracket: boolean;
   startId: string;
+  teammates: Teammate[] | undefined;
 }
 
 export interface Commentator {
@@ -60,7 +61,11 @@ export interface Scoreboard {
   streamUrl: string;
   isTeams: boolean;
   startGGUri: string | undefined;
-  teammates: string[] | undefined;
+}
+
+export interface Teammate {
+  name: string;
+  isEliminated: boolean;
 }
 
 export interface Scoreboards {
