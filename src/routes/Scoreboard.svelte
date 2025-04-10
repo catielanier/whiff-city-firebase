@@ -10,7 +10,7 @@
 
   onMount(() => {
     const database = getDatabase(firebase);
-    const reference = ref(database, `/scoreboard/${id}`);
+    const reference = ref(database, `/scoreboards/${id}`);
     onValue(reference, (res) => {
       const data = res.val();
       players = data.players;
@@ -230,4 +230,3 @@
     margin-left: 215px;
   }
 </style>
-
