@@ -263,6 +263,11 @@
     margin: 0;
     padding: 0;
   }
+
+  .team-info h4 {
+    background-color: #ffed97;
+    color: #eb0405;
+  }
   .left-team {
     left: 0;
   }
