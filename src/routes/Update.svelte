@@ -9,7 +9,14 @@
     ScoreboardsSimple,
     Teammate,
   } from "../utils/types";
-  import { getDatabase, ref, onValue, get, update } from "firebase/database";
+  import {
+    getDatabase,
+    ref,
+    onValue,
+    get,
+    update,
+    set,
+  } from "firebase/database";
   import { derived, writable } from "svelte/store";
   import { firebase } from "../utils/firebase";
   import { games, header } from "../utils/data";
@@ -67,16 +74,18 @@
   const combined = derived(
     [players, commentators, gameInfo],
     ([$players, $commentators, $gameInfo]) => {
-      return null;
+      return {
+        players: $players,
+        commentators: $commentators,
+        gameInfo: $gameInfo,
+      };
     },
   );
 
   const debouncedUpdate = debounce(updateScoreboard, 3000);
 
   combined.subscribe(() => {
-    if ($players && $players.length >= 2) {
-      debouncedUpdate();
-    }
+    debouncedUpdate();
   });
 
   const generateSlug = (): string => {
@@ -115,7 +124,7 @@
         $players[0].playerName = $players[0].teammates
           ? $players[0].teammates[0].name
           : "";
-        $leftTeammates.shift();
+        $players[0].teammates?.shift();
         break;
       case "right":
         prevPlayer = {
@@ -126,9 +135,12 @@
         $players[1].playerName = $players[1].teammates
           ? $players[1].teammates[0].name
           : "";
-        $rightTeammates.shift();
+        $players[1].teammates?.shift();
+        break;
+      default:
         break;
     }
+    updateScoreboard();
   };
 
   const eliminatePlayer = (side: string): void => {
@@ -143,7 +155,7 @@
         $players[0].playerName = $players[0].teammates
           ? $players[0].teammates[0].name
           : "";
-        $leftTeammates.shift();
+        $players[0].teammates?.shift();
         break;
       case "right":
         prevPlayer = {
@@ -154,9 +166,12 @@
         $players[1].playerName = $players[1].teammates
           ? $players[1].teammates[0].name
           : "";
-        $rightTeammates.shift();
+        $players[1].teammates?.shift();
+        break;
+      default:
         break;
     }
+    updateScoreboard();
   };
 
   const retrieveStreamQueue = (
@@ -592,10 +607,10 @@
                       bind:value={$players[1].score}
                     />
                     {#if $isTeams}
-                      <button on:click={() => rotateTeammates("left")}>
+                      <button on:click={() => rotateTeammates("right")}>
                         Rotate
                       </button>
-                      <button on:click={() => eliminatePlayer("left")}>
+                      <button on:click={() => eliminatePlayer("right")}>
                         Eliminate
                       </button>
                     {/if}
