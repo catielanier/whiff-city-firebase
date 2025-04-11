@@ -59,7 +59,7 @@
       </div>
     </div>
     {#if isTeams && players[0].teammates && players[1].teammates}
-      <div class="left-team team">
+      <div class="left-team team-info">
         <h4>Teammates:</h4>
         {#each players[0].teammates as player}
           <p class="player {player.isEliminated && 'eliminated'}">
@@ -67,7 +67,7 @@
           </p>
         {/each}
       </div>
-      <div class="right-team team">
+      <div class="right-team team-info">
         <h4>Teammates:</h4>
         {#each players[1].teammates as player}
           <p class="player {player.isEliminated && 'eliminated'}">
@@ -250,7 +250,7 @@
     margin-left: 215px;
   }
 
-  .team {
+  .team-info {
     background: #eb0405;
     color: #fff;
     width: 150px;
@@ -258,8 +258,8 @@
     position: absolute;
     top: 120px;
   }
-  .team h4,
-  .team p {
+  .team-info h4,
+  .team-info p {
     margin: 0;
     padding: 0;
   }
@@ -269,7 +269,7 @@
   .right-team {
     right: -80px;
   }
-  .team p.eliminated {
+  .team-info p.eliminated {
     text-decoration: line-through;
     color: #ccc;
   }
