@@ -31,7 +31,10 @@
       score: 0,
       isLosersBracket: false,
       startId: "",
-      teammates: $isTeams ? [...generateSeedTeammate()] : undefined,
+      teammates: $isTeams ? [...generateSeedTeammate()] : [],
+      pronouns: "",
+      xHandle: "",
+      seed: 0,
     };
   };
 
