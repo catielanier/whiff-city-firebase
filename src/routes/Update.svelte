@@ -190,50 +190,65 @@
         },
       )
       .then((res) => {
+        const streamIndex: number = res.data.data.streamQueue.findIndex(
+          (x: any) => {
+            x.stream.streamName === $streamChannel;
+          },
+        );
+        const set = res.data.data.streamQueue[streamIndex].sets[0];
+        const leftPlayerXHandleIndex =
+          set.slots[0].entrant.participants[0].user.authorizations.findIndex(
+            (x) => {
+              x.type === "TWITTER";
+            },
+          );
+        const rightPlayerXHandleIndex =
+          set.slots[1].entrant.participants[0].user.authorizations.findIndex(
+            (x) => {
+              x.type === "TWITTER";
+            },
+          );
         const leftPlayer: Player = {
           id: 1,
-          playerName:
-            res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(
-              /^.*\s\|\s/,
-              "",
-            ),
-          teamName:
-            res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.includes(
-              " | ",
-            )
-              ? res.data.data.streamQueue[0].sets[0].slots[0].entrant.name.replace(
-                  /\s\|\s.*/,
-                  "",
-                )
-              : "",
+          playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
+          teamName: set.slots[0].entrant.name.includes(" | ")
+            ? set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
+            : "",
           score: 0,
           isLosersBracket: false,
-          startId: res.data.data.streamQueue[0].sets[0].slots[0].entrant.id,
+          startId:
+            res.data.data.streamQueue[streamIndex].sets[0].slots[0].entrant.id,
+          xHandle: leftPlayerXHandleIndex
+            ? set.slots[0].entrant.participants[0].user.authorizations[
+                leftPlayerXHandleIndex
+              ].externalUsername
+            : "",
+          pronouns: set.slots[0].entrant.participants[0].user.genderPronoun,
+          seed: set.slots[0].entrant.initialSeedNum,
+          teammates: [],
         };
         const rightPlayer: Player = {
           id: 2,
-          playerName:
-            res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(
-              /^.*\s\|\s/,
-              "",
-            ),
-          teamName:
-            res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.includes(
-              " | ",
-            )
-              ? res.data.data.streamQueue[0].sets[0].slots[1].entrant.name.replace(
-                  /\s\|\s.*/,
-                  "",
-                )
-              : "",
+          playerName: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
+          teamName: set.slots[1].entrant.name.includes(" | ")
+            ? set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
+            : "",
           score: 0,
           isLosersBracket: false,
-          startId: res.data.data.streamQueue[0].sets[0].slots[1].entrant.id,
+          startId: set.slots[1].entrant.id,
+          xHandle: leftPlayerXHandleIndex
+            ? set.slots[1].entrant.participants[0].user.authorizations[
+                rightPlayerXHandleIndex
+              ].externalUsername
+            : "",
+          pronouns: set.slots[1].entrant.participants[0].user.genderPronoun,
+          seed: set.slots[1].entrant.initialSeedNum,
+          teammates: [],
         };
-        $players = [leftPlayer, rightPlayer];
-        $currentSetId = res.data.data.streamQueue[0].sets[0].id;
+        players.set([leftPlayer, rightPlayer]);
+        currentSetId.set(set.id);
         if (shouldUpdateScoreboard) updateScoreboard();
-        updateStreamQueue(res.data.data.streamQueue[0].sets);
+        updateStreamQueue(res.data.data.streamQueue[streamIndex].sets);
       })
       .catch((err) => {
         errMsg.set(err.message);
@@ -513,6 +528,16 @@
                     {/each}
                   </div>
                 {/if}
+                {#if !$isTeams}
+                  <div class="player-seed">
+                    <p>Seed:</p>
+                    <input type="number" bind:value={$players[0].seed} />
+                  </div>
+                  <div class="player-pronouns">
+                    <p>Pronouns:</p>
+                    <input type="text" bind:value={$players[0].pronouns} />
+                  </div>
+                {/if}
                 <div class="losers-bracket">
                   <p>Losers Bracket:</p>
                   <input
@@ -587,6 +612,16 @@
                     {#each $players[1].teammates as teammate}
                       <input type="text" bind:value={teammate.name} />
                     {/each}
+                  </div>
+                {/if}
+                {#if !$isTeams}
+                  <div class="player-seed">
+                    <p>Seed:</p>
+                    <input type="number" bind:value={$players[1].seed} />
+                  </div>
+                  <div class="player-pronouns">
+                    <p>Pronouns:</p>
+                    <input type="text" bind:value={$players[1].pronouns} />
                   </div>
                 {/if}
                 <div class="losers-bracket">

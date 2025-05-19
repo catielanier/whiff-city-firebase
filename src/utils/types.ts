@@ -8,6 +8,7 @@ export interface Player {
   isLosersBracket: boolean;
   startId: string;
   teammates: Teammate[] | undefined;
+  xHandle: string;
 }
 
 export interface Commentator {
