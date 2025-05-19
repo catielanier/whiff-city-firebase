@@ -22,10 +22,12 @@ export const streamQueueQuery = `
             }
             name
             initialSeedNum
-            participant {
+            participants {
               prefix
               user {
-                authorizations
+                authorizations {
+                  externalUsername
+                }
                 genderPronoun
               }
             }
