@@ -3,6 +3,8 @@ export interface Player {
   playerName: string;
   teamName: string;
   score: number;
+  seed: number | undefined;
+  pronouns: string;
   isLosersBracket: boolean;
   startId: string;
   teammates: Teammate[] | undefined;
