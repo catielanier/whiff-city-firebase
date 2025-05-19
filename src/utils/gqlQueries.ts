@@ -4,7 +4,7 @@ export const tournamentQuery = `
             id
         }
     }
-`
+`;
 
 export const streamQueueQuery = `
     query TournamentQuery($tournamentId: ID!) {
@@ -21,6 +21,14 @@ export const streamQueueQuery = `
               name
             }
             name
+            initialSeedNum
+            participant {
+              prefix
+              user {
+                authorizations
+                genderPronoun
+              }
+            }
           }
         }
         event {
@@ -33,4 +41,5 @@ export const streamQueueQuery = `
       }
     }
 }
-`
+`;
+
