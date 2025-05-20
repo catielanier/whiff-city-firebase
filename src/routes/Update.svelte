@@ -210,12 +210,20 @@
               return x.type === "TWITTER";
             },
           ) ?? -1;
+        const leftPlayerXHandle: string =
+          set.slots[0].entrant.participants[0].user.authorizations[
+            leftPlayerXHandleIndex
+          ].externalUsername ?? "";
         const rightPlayerXHandleIndex: number =
           set.slots[1].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
               return x.type === "TWITTER";
             },
           ) ?? -1;
+        const rightPlayerXHandle: string =
+          set.slots[1].entrant.participants[0].user.authorizations[
+            rightPlayerXHandleIndex
+          ].externalUsername ?? "";
         const leftPlayer: Player = {
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
@@ -226,11 +234,7 @@
           isLosersBracket: false,
           startId:
             res.data.data.streamQueue[streamIndex].sets[0].slots[0].entrant.id,
-          xHandle: leftPlayerXHandleIndex
-            ? set.slots[0].entrant.participants[0].user.authorizations[
-                leftPlayerXHandleIndex
-              ].externalUsername
-            : "",
+          xHandle: leftPlayerXHandle,
           pronouns:
             set.slots[0].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[0].entrant.initialSeedNum,
@@ -245,16 +249,13 @@
           score: 0,
           isLosersBracket: false,
           startId: set.slots[1].entrant.id,
-          xHandle: leftPlayerXHandleIndex
-            ? set.slots[1].entrant.participants[0].user.authorizations[
-                rightPlayerXHandleIndex
-              ].externalUsername
-            : "",
+          xHandle: rightPlayerXHandle,
           pronouns:
             set.slots[1].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[1].entrant.initialSeedNum,
           teammates: [],
         };
+        console.log({ rightPlayer });
         $players[0] = leftPlayer;
         $players[1] = rightPlayer;
         currentSetId.set(set.id);
@@ -775,27 +776,18 @@
             <div class="commentator-one-wrapper">
               <div class="team">
                 <p>Team:</p>
-                <input
-                  type="text"
-                  bind:value={$commentators[0].teamName}
-                  on:input={() => isUserInput.set(true)}
-                />
+                <input type="text" bind:value={$commentators[0].teamName} />
               </div>
               <div class="commentator-name">
                 <p>Commentator Name:</p>
                 <input
                   type="text"
                   bind:value={$commentators[0].commentatorName}
-                  on:input={() => isUserInput.set(true)}
                 />
               </div>
               <div class="x-handle">
                 <p>Twitter/Bsky (Exclude @):</p>
-                <input
-                  type="text"
-                  bind:value={$commentators[0].xHandle}
-                  on:input={() => isUserInput.set(true)}
-                />
+                <input type="text" bind:value={$commentators[0].xHandle} />
               </div>
             </div>
           </div>
