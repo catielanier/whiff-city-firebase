@@ -10,6 +10,9 @@ export const streamQueueQuery = `
     query TournamentQuery($tournamentId: ID!) {
     streamQueue(tournamentId: $tournamentId) {
         id
+        stream {
+          streamName
+        }
         sets {
         id
         slots {
