@@ -285,17 +285,21 @@
         players: [
           {
             name: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
-            teamName: (set.slots[0].entrant.name =
-              set.slots[0].entrant.name.includes("|")
-                ? set.slots[0].entrant.name.replace(/\s*\|\s*/g, "")
-                : ""),
+            teamName: set.slots[0].entrant.name.includes("|")
+              ? set.slots[0].entrant.name
+                  .replace(/\s*\|\s*[^|]+$/, "")
+                  .replace(/\s*\|\s*/g, "")
+                  .trim()
+              : "",
           },
           {
             name: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
-            teamName: (set.slots[1].entrant.name =
-              set.slots[1].entrant.name.includes("|")
-                ? set.slots[1].entrant.name.replace(/\s*\|\s*/g, "")
-                : ""),
+            teamName: set.slots[1].entrant.name.includes("|")
+              ? set.slots[1].entrant.name
+                  .replace(/\s*\|\s*[^|]+$/, "")
+                  .replace(/\s*\|\s*/g, "")
+                  .trim()
+              : "",
           },
         ],
       };
