@@ -580,6 +580,14 @@
                       on:input={() => isUserInput.set(true)}
                     />
                   </div>
+                  <div class="player-x-handle">
+                    <p>Twitter/Bsky (Exclude @):</p>
+                    <input
+                      type="text"
+                      on:input={() => isUserInput.set(true)}
+                      bind:value={$players[0].xHandle}
+                    />
+                  </div>
                 {/if}
                 <div class="losers-bracket">
                   <p>Losers Bracket:</p>
@@ -698,6 +706,14 @@
                       on:input={() => isUserInput.set(true)}
                     />
                   </div>
+                  <div class="player-x-handle">
+                    <p>Twitter/Bsky (Exclude @):</p>
+                    <input
+                      type="text"
+                      on:input={() => isUserInput.set(true)}
+                      bind:value={$players[1].xHandle}
+                    />
+                  </div>
                 {/if}
                 <div class="losers-bracket">
                   <p>Losers Bracket:</p>
@@ -759,18 +775,27 @@
             <div class="commentator-one-wrapper">
               <div class="team">
                 <p>Team:</p>
-                <input type="text" bind:value={$commentators[0].teamName} />
+                <input
+                  type="text"
+                  bind:value={$commentators[0].teamName}
+                  on:input={() => isUserInput.set(true)}
+                />
               </div>
               <div class="commentator-name">
                 <p>Commentator Name:</p>
                 <input
                   type="text"
                   bind:value={$commentators[0].commentatorName}
+                  on:input={() => isUserInput.set(true)}
                 />
               </div>
               <div class="x-handle">
                 <p>Twitter/Bsky (Exclude @):</p>
-                <input type="text" bind:value={$commentators[0].xHandle} />
+                <input
+                  type="text"
+                  bind:value={$commentators[0].xHandle}
+                  on:input={() => isUserInput.set(true)}
+                />
               </div>
             </div>
           </div>
@@ -787,18 +812,27 @@
             <div class="commentator-two-wrapper">
               <div class="team">
                 <p>Team:</p>
-                <input type="text" bind:value={$commentators[1].teamName} />
+                <input
+                  type="text"
+                  bind:value={$commentators[1].teamName}
+                  on:input={() => isUserInput.set(true)}
+                />
               </div>
               <div class="commentator-name">
                 <p>Commentator Name:</p>
                 <input
                   type="text"
+                  on:input={() => isUserInput.set(true)}
                   bind:value={$commentators[1].commentatorName}
                 />
               </div>
               <div class="x-handle">
                 <p>Twitter/Bsky (Exclude @):</p>
-                <input type="text" bind:value={$commentators[1].xHandle} />
+                <input
+                  type="text"
+                  on:input={() => isUserInput.set(true)}
+                  bind:value={$commentators[1].xHandle}
+                />
               </div>
             </div>
           </div>
