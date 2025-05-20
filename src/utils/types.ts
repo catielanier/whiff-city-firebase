@@ -22,6 +22,7 @@ export interface UpdateData {
   players: Player[];
   commentators: Commentator[];
   gameInfo: GameInfo;
+  startGGUri: string | undefined;
 }
 
 export interface FirebaseConfig {

@@ -190,24 +190,38 @@
         },
       )
       .then((res) => {
+        console.log("starting mutation");
+        console.log({ res });
+        console.log({
+          apiStreamName: res.data.data.streamQueue[0].stream.streamName,
+          streamChannel: $streamChannel,
+        });
         const streamIndex: number = res.data.data.streamQueue.findIndex(
           (x: any) => {
-            x.stream.streamName === $streamChannel;
+            return (
+              x.stream.streamName.toLowerCase() === $streamChannel.toLowerCase()
+            );
           },
         );
+        console.log({ streamIndex });
         const set = res.data.data.streamQueue[streamIndex].sets[0];
-        const leftPlayerXHandleIndex =
-          set.slots[0].entrant.participants[0].user.authorizations.findIndex(
+        console.log({ set });
+        const leftPlayerXHandleIndex: number =
+          set.slots[0].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
-              x.type === "TWITTER";
+              console.log(x.type);
+              return x.type === "TWITTER";
             },
-          );
-        const rightPlayerXHandleIndex =
-          set.slots[1].entrant.participants[0].user.authorizations.findIndex(
+          ) ?? -1;
+        console.log({ leftPlayerXHandleIndex });
+        const rightPlayerXHandleIndex: number =
+          set.slots[1].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
-              x.type === "TWITTER";
+              console.log(x.type);
+              return x.type === "TWITTER";
             },
-          );
+          ) ?? -1;
+        console.log({ rightPlayerXHandleIndex });
         const leftPlayer: Player = {
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
@@ -245,10 +259,14 @@
           seed: set.slots[1].entrant.initialSeedNum,
           teammates: [],
         };
-        players.set([leftPlayer, rightPlayer]);
+        $players[0] = leftPlayer;
+        $players[1] = rightPlayer;
+        console.log($players);
         currentSetId.set(set.id);
-        if (shouldUpdateScoreboard) updateScoreboard();
         updateStreamQueue(res.data.data.streamQueue[streamIndex].sets);
+      })
+      .finally(() => {
+        if (shouldUpdateScoreboard) updateScoreboard();
       })
       .catch((err) => {
         errMsg.set(err.message);
@@ -488,7 +506,7 @@
           <button
             on:click={(e) => {
               e.preventDefault();
-              !tournamentId ? retrieveTournament() : retrieveStreamQueue();
+              !$tournamentId ? retrieveTournament() : retrieveStreamQueue();
             }}>Retrieve Stream Queue</button
           >
           <button on:click={submitResults}>Submit Match Results</button>

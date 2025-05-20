@@ -30,6 +30,7 @@ export const streamQueueQuery = `
               user {
                 authorizations {
                   externalUsername
+                  type
                 }
                 genderPronoun
               }
