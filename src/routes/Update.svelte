@@ -31,6 +31,7 @@
   const scoreboards = writable<ScoreboardsSimple[]>([]);
   const gameInfo = writable<GameInfo>({ title: "sf6", round: "" });
   const isTeams = writable<boolean>(false);
+  const isUserInput = writable<boolean>(false);
 
   const tournamentUrl = writable<string>("");
   const tournamentId = writable<string>("");
@@ -56,6 +57,7 @@
       gameInfo: $gameInfo!,
       startGGUri: $tournamentUrl,
     };
+    console.log({ updateInfo });
     if (!updateInfo.players[0].score || updateInfo.players[0].score < 0)
       updateInfo.players[0].score = 0;
     if (!updateInfo.players[1].score || updateInfo.players[1].score < 0)
@@ -86,7 +88,10 @@
   const debouncedUpdate = debounce(updateScoreboard, 3000);
 
   combined.subscribe(() => {
-    debouncedUpdate();
+    if ($isUserInput) {
+      debouncedUpdate();
+      isUserInput.set(false);
+    }
   });
 
   const generateSlug = (): string => {
@@ -226,7 +231,8 @@
                 leftPlayerXHandleIndex
               ].externalUsername
             : "",
-          pronouns: set.slots[0].entrant.participants[0].user.genderPronoun,
+          pronouns:
+            set.slots[0].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[0].entrant.initialSeedNum,
           teammates: [],
         };
@@ -244,7 +250,8 @@
                 rightPlayerXHandleIndex
               ].externalUsername
             : "",
-          pronouns: set.slots[1].entrant.participants[0].user.genderPronoun,
+          pronouns:
+            set.slots[1].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[1].entrant.initialSeedNum,
           teammates: [],
         };
@@ -254,7 +261,9 @@
         updateStreamQueue(res.data.data.streamQueue[streamIndex].sets);
       })
       .finally(() => {
-        if (shouldUpdateScoreboard) updateScoreboard();
+        if (shouldUpdateScoreboard) {
+          updateScoreboard();
+        }
       })
       .catch((err) => {
         errMsg.set(err.message);
@@ -408,13 +417,13 @@
   const getScoreboard = (): void => {
     const database = getDatabase(firebase);
     const reference = ref(database, `/scoreboards/${$scoreboardId}`);
-    onValue(reference, (res) => {
+    get(reference).then((res) => {
       const data = res.val();
       if (data) {
         players.set(data.players);
         commentators.set(data.commentators);
         gameInfo.set(data.gameInfo);
-        tournamentUrl.set(data.tournamentUrl);
+        tournamentUrl.set(data.startGGUri);
         streamChannel.set(data.streamUrl);
         isTeams.set(data.isTeams);
       }
@@ -480,13 +489,21 @@
             placeholder="Tournament URL"
           />
           <p>Game:</p>
-          <select bind:value={$gameInfo.title}>
+          <select
+            bind:value={$gameInfo.title}
+            on:input={() => isUserInput.set(true)}
+          >
             {#each games as game}
               <option value={game.data}>{game.name}</option>
             {/each}
           </select>
           <p>Round:</p>
-          <input type="text" bind:value={$gameInfo.round} class="round" />
+          <input
+            type="text"
+            on:input={() => isUserInput.set(true)}
+            bind:value={$gameInfo.round}
+            class="round"
+          />
         {/if}
       </div>
       {#if $scoreboardId}
@@ -520,28 +537,48 @@
               <div class="player-info wrapper">
                 <div class="team">
                   <p>Team:</p>
-                  <input type="text" bind:value={$players[0].teamName} />
+                  <input
+                    type="text"
+                    bind:value={$players[0].teamName}
+                    on:input={() => isUserInput.set(true)}
+                  />
                 </div>
                 <div class="player-name">
                   <p>Player Name:</p>
-                  <input type="text" bind:value={$players[0].playerName} />
+                  <input
+                    type="text"
+                    bind:value={$players[0].playerName}
+                    on:input={() => isUserInput.set(true)}
+                  />
                 </div>
                 {#if $isTeams && $players[0].teammates?.length}
                   <div class="teammates">
                     <p>Teammates:</p>
                     {#each $players[0].teammates as teammate}
-                      <input type="text" bind:value={teammate.name} />
+                      <input
+                        type="text"
+                        bind:value={teammate.name}
+                        on:input={() => isUserInput.set(true)}
+                      />
                     {/each}
                   </div>
                 {/if}
                 {#if !$isTeams}
                   <div class="player-seed">
                     <p>Seed:</p>
-                    <input type="number" bind:value={$players[0].seed} />
+                    <input
+                      type="number"
+                      bind:value={$players[0].seed}
+                      on:input={() => isUserInput.set(true)}
+                    />
                   </div>
                   <div class="player-pronouns">
                     <p>Pronouns:</p>
-                    <input type="text" bind:value={$players[0].pronouns} />
+                    <input
+                      type="text"
+                      bind:value={$players[0].pronouns}
+                      on:input={() => isUserInput.set(true)}
+                    />
                   </div>
                 {/if}
                 <div class="losers-bracket">
@@ -549,6 +586,7 @@
                   <input
                     type="checkbox"
                     bind:checked={$players[0].isLosersBracket}
+                    on:input={() => isUserInput.set(true)}
                   />
                 </div>
               </div>
@@ -560,12 +598,21 @@
                       type="number"
                       min="0"
                       bind:value={$players[0].score}
+                      on:input={() => isUserInput.set(true)}
                     />
                     {#if $isTeams}
-                      <button on:click={() => rotateTeammates("left")}>
+                      <button
+                        on:click={() => {
+                          rotateTeammates("left");
+                        }}
+                      >
                         Rotate
                       </button>
-                      <button on:click={() => eliminatePlayer("left")}>
+                      <button
+                        on:click={() => {
+                          eliminatePlayer("left");
+                        }}
+                      >
                         Eliminate
                       </button>
                     {/if}
@@ -575,6 +622,7 @@
                       class="plus"
                       on:click={() => {
                         updateScore("left", "+");
+                        isUserInput.set(true);
                       }}
                     >
                       +
@@ -583,6 +631,7 @@
                       class="minus"
                       on:click={() => {
                         updateScore("left", "-");
+                        isUserInput.set(true);
                       }}
                     >
                       -
@@ -606,28 +655,48 @@
               <div class="player-info wrapper">
                 <div class="team">
                   <p>Team:</p>
-                  <input type="text" bind:value={$players[1].teamName} />
+                  <input
+                    type="text"
+                    bind:value={$players[1].teamName}
+                    on:input={() => isUserInput.set(true)}
+                  />
                 </div>
                 <div class="player-name">
                   <p>Player Name:</p>
-                  <input type="text" bind:value={$players[1].playerName} />
+                  <input
+                    type="text"
+                    bind:value={$players[1].playerName}
+                    on:input={() => isUserInput.set(true)}
+                  />
                 </div>
                 {#if $isTeams && $players[1].teammates?.length}
                   <div class="teammates">
                     <p>Teammates:</p>
                     {#each $players[1].teammates as teammate}
-                      <input type="text" bind:value={teammate.name} />
+                      <input
+                        type="text"
+                        bind:value={teammate.name}
+                        on:input={() => isUserInput.set(true)}
+                      />
                     {/each}
                   </div>
                 {/if}
                 {#if !$isTeams}
                   <div class="player-seed">
                     <p>Seed:</p>
-                    <input type="number" bind:value={$players[1].seed} />
+                    <input
+                      type="number"
+                      bind:value={$players[1].seed}
+                      on:input={() => isUserInput.set(true)}
+                    />
                   </div>
                   <div class="player-pronouns">
                     <p>Pronouns:</p>
-                    <input type="text" bind:value={$players[1].pronouns} />
+                    <input
+                      type="text"
+                      bind:value={$players[1].pronouns}
+                      on:input={() => isUserInput.set(true)}
+                    />
                   </div>
                 {/if}
                 <div class="losers-bracket">
@@ -635,6 +704,7 @@
                   <input
                     type="checkbox"
                     bind:checked={$players[1].isLosersBracket}
+                    on:input={() => isUserInput.set(true)}
                   />
                 </div>
               </div>
@@ -646,6 +716,7 @@
                       type="number"
                       min="0"
                       bind:value={$players[1].score}
+                      on:input={() => isUserInput.set(true)}
                     />
                     {#if $isTeams}
                       <button on:click={() => rotateTeammates("right")}>
@@ -661,6 +732,7 @@
                       class="plus"
                       on:click={() => {
                         updateScore("right", "+");
+                        isUserInput.set(true);
                       }}
                     >
                       +
@@ -669,6 +741,7 @@
                       class="minus"
                       on:click={() => {
                         updateScore("right", "-");
+                        isUserInput.set(true);
                       }}
                     >
                       -
