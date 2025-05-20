@@ -210,9 +210,11 @@
             },
           ) ?? -1;
         const leftPlayerXHandle: string =
-          set.slots[0].entrant.participants[0].user.authorizations[
-            leftPlayerXHandleIndex
-          ].externalUsername ?? "";
+          leftPlayerXHandleIndex > -1
+            ? set.slots[0].entrant.participants[0].user.authorizations[
+                leftPlayerXHandleIndex
+              ].externalUsername
+            : "";
         const rightPlayerXHandleIndex: number =
           set.slots[1].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
@@ -220,9 +222,11 @@
             },
           ) ?? -1;
         const rightPlayerXHandle: string =
-          set.slots[1].entrant.participants[0].user.authorizations[
-            rightPlayerXHandleIndex
-          ].externalUsername ?? "";
+          rightPlayerXHandleIndex > -1
+            ? set.slots[1].entrant.participants[0].user.authorizations[
+                rightPlayerXHandleIndex
+              ].externalUsername
+            : "";
         const leftPlayer: Player = {
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
