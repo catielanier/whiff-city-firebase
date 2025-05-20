@@ -58,6 +58,26 @@
         </div>
       </div>
     </div>
+    <div class="left-player-details {gameInfo.title}">
+      <div class="seed">
+        Seed: #{players[0].seed}
+      </div>
+      {#if players[0].pronouns}
+        <div class="pronouns">
+          {players[0].pronouns}
+        </div>
+      {/if}
+    </div>
+    <div class="right-player-details {gameInfo.title}">
+      {#if players[1].pronouns}
+        <div class="pronouns">
+          {players[1].pronouns}
+        </div>
+      {/if}
+      <div class="seed">
+        Seed: #{players[1].seed}
+      </div>
+    </div>
     {#if isTeams && players[0].teammates && players[1].teammates}
       <div class="left-team team-info">
         <h4>Teammates:</h4>
@@ -90,6 +110,62 @@
     font-style: normal;
     font-size: 30px;
     position: relative;
+  }
+  .left-player-details {
+    position: absolute;
+    top: 110px;
+    left: 120px;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+  }
+
+  .left-player-details.sf6 {
+    top: 110px;
+    left: 120px;
+  }
+  .right-player-details {
+    position: absolute;
+    top: 110px;
+    right: 50px;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    align-items: end;
+  }
+
+  .right-player-details .seed {
+    grid-column: 2;
+  }
+
+  .right-player-details .pronouns {
+    grid-column: 1;
+  }
+
+  .right-player-details.sf6 {
+    top: 110px;
+    right: 40px;
+  }
+
+  .left-player-details .seed,
+  .left-player-details .pronouns {
+    background: #235ba8;
+    color: #fff;
+  }
+
+  .right-player-details .seed,
+  .right-player-details .pronouns {
+    background: #ffed97;
+    color: #000;
+  }
+
+  .left-player-details .seed,
+  .right-player-details .seed,
+  .left-player-details .pronouns,
+  .right-player-details .pronouns {
+    padding: 4px 8px;
   }
 
   .scoreboard.bbcf,

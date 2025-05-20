@@ -215,7 +215,7 @@
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
           teamName: set.slots[0].entrant.name.includes(" | ")
-            ? set.slots[0].entrant.name.replace(/\s\|\s.*/, "")
+            ? set.slots[0].entrant.name.replace(/\|.*/, "")
             : "",
           score: 0,
           isLosersBracket: false,
@@ -234,7 +234,7 @@
           id: 2,
           playerName: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
           teamName: set.slots[1].entrant.name.includes(" | ")
-            ? set.slots[1].entrant.name.replace(/\s\|\s.*/, "")
+            ? set.slots[1].entrant.name.replace(/\|.*/, "")
             : "",
           score: 0,
           isLosersBracket: false,
