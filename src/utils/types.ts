@@ -3,9 +3,12 @@ export interface Player {
   playerName: string;
   teamName: string;
   score: number;
+  seed: number | undefined;
+  pronouns: string;
   isLosersBracket: boolean;
   startId: string;
   teammates: Teammate[] | undefined;
+  xHandle: string;
 }
 
 export interface Commentator {
@@ -19,6 +22,7 @@ export interface UpdateData {
   players: Player[];
   commentators: Commentator[];
   gameInfo: GameInfo;
+  startGGUri: string | undefined;
 }
 
 export interface FirebaseConfig {
