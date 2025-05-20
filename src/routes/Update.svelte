@@ -210,9 +210,11 @@
             },
           ) ?? -1;
         const leftPlayerXHandle: string =
-          set.slots[0].entrant.participants[0].user.authorizations[
-            leftPlayerXHandleIndex
-          ].externalUsername ?? "";
+          leftPlayerXHandleIndex > -1
+            ? set.slots[0].entrant.participants[0].user.authorizations[
+                leftPlayerXHandleIndex
+              ].externalUsername
+            : "";
         const rightPlayerXHandleIndex: number =
           set.slots[1].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
@@ -220,9 +222,11 @@
             },
           ) ?? -1;
         const rightPlayerXHandle: string =
-          set.slots[1].entrant.participants[0].user.authorizations[
-            rightPlayerXHandleIndex
-          ].externalUsername ?? "";
+          rightPlayerXHandleIndex > -1
+            ? set.slots[1].entrant.participants[0].user.authorizations[
+                rightPlayerXHandleIndex
+              ].externalUsername
+            : "";
         const leftPlayer: Player = {
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
@@ -273,6 +277,7 @@
     const updateInfo: any = {
       streamQueue: [],
     };
+    console.log("updating stream queue");
     sets.forEach((set: any) => {
       const match: QueuedMatch = {
         id: set.id,
@@ -280,17 +285,21 @@
         players: [
           {
             name: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
-            teamName: (set.slots[0].entrant.name =
-              set.slots[0].entrant.name.includes("|")
-                ? set.slots[0].entrant.name.replace(/\s*\|\s*/g, "")
-                : ""),
+            teamName: set.slots[0].entrant.name.includes("|")
+              ? set.slots[0].entrant.name
+                  .replace(/\s*\|\s*[^|]+$/, "")
+                  .replace(/\s*\|\s*/g, "")
+                  .trim()
+              : "",
           },
           {
             name: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
-            teamName: (set.slots[1].entrant.name =
-              set.slots[1].entrant.name.includes("|")
-                ? set.slots[1].entrant.name.replace(/\s*\|\s*/g, "")
-                : ""),
+            teamName: set.slots[1].entrant.name.includes("|")
+              ? set.slots[1].entrant.name
+                  .replace(/\s*\|\s*[^|]+$/, "")
+                  .replace(/\s*\|\s*/g, "")
+                  .trim()
+              : "",
           },
         ],
       };
@@ -298,12 +307,14 @@
     });
     const db = getDatabase(firebase);
     const reference = ref(db, `streamQueue/${$streamChannel}`);
-    update(reference, updateInfo.streamQueue)
-      .then((_) => {
+    set(reference, updateInfo.streamQueue)
+      .then(() => {
         isLoading.set(false);
+        console.log("set");
       })
-      .catch((_) => {
+      .catch(() => {
         errMsg.set("Error updating stream queue. Try again.");
+        console.log("cannot set");
         isLoading.set(false);
       });
   };
