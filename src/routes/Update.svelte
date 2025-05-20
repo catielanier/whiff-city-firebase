@@ -54,6 +54,7 @@
       players: $players,
       commentators: $commentators,
       gameInfo: $gameInfo!,
+      startGGUri: $tournamentUrl,
     };
     if (!updateInfo.players[0].score || updateInfo.players[0].score < 0)
       updateInfo.players[0].score = 0;
@@ -190,12 +191,6 @@
         },
       )
       .then((res) => {
-        console.log("starting mutation");
-        console.log({ res });
-        console.log({
-          apiStreamName: res.data.data.streamQueue[0].stream.streamName,
-          streamChannel: $streamChannel,
-        });
         const streamIndex: number = res.data.data.streamQueue.findIndex(
           (x: any) => {
             return (
@@ -203,25 +198,19 @@
             );
           },
         );
-        console.log({ streamIndex });
         const set = res.data.data.streamQueue[streamIndex].sets[0];
-        console.log({ set });
         const leftPlayerXHandleIndex: number =
           set.slots[0].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
-              console.log(x.type);
               return x.type === "TWITTER";
             },
           ) ?? -1;
-        console.log({ leftPlayerXHandleIndex });
         const rightPlayerXHandleIndex: number =
           set.slots[1].entrant.participants[0].user.authorizations?.findIndex(
             (x) => {
-              console.log(x.type);
               return x.type === "TWITTER";
             },
           ) ?? -1;
-        console.log({ rightPlayerXHandleIndex });
         const leftPlayer: Player = {
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
@@ -261,7 +250,6 @@
         };
         $players[0] = leftPlayer;
         $players[1] = rightPlayer;
-        console.log($players);
         currentSetId.set(set.id);
         updateStreamQueue(res.data.data.streamQueue[streamIndex].sets);
       })
