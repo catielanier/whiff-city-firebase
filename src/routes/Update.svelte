@@ -57,7 +57,6 @@
       gameInfo: $gameInfo!,
       startGGUri: $tournamentUrl,
     };
-    console.log({ updateInfo });
     if (!updateInfo.players[0].score || updateInfo.players[0].score < 0)
       updateInfo.players[0].score = 0;
     if (!updateInfo.players[1].score || updateInfo.players[1].score < 0)
@@ -255,7 +254,6 @@
           seed: set.slots[1].entrant.initialSeedNum,
           teammates: [],
         };
-        console.log({ rightPlayer });
         $players[0] = leftPlayer;
         $players[1] = rightPlayer;
         currentSetId.set(set.id);
