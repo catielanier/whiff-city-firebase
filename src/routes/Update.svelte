@@ -277,6 +277,7 @@
     const updateInfo: any = {
       streamQueue: [],
     };
+    console.log("updating stream queue");
     sets.forEach((set: any) => {
       const match: QueuedMatch = {
         id: set.id,
@@ -302,12 +303,14 @@
     });
     const db = getDatabase(firebase);
     const reference = ref(db, `streamQueue/${$streamChannel}`);
-    update(reference, updateInfo.streamQueue)
-      .then((_) => {
+    set(reference, updateInfo.streamQueue)
+      .then(() => {
         isLoading.set(false);
+        console.log("set");
       })
-      .catch((_) => {
+      .catch(() => {
         errMsg.set("Error updating stream queue. Try again.");
+        console.log("cannot set");
         isLoading.set(false);
       });
   };
