@@ -69,14 +69,14 @@
       {/if}
       {#if players[0].xHandle.length}
         <div class="x-handle">
-          @{players[0].xHandle}
+          <span class="at-tag">@</span>{players[0].xHandle}
         </div>
       {/if}
     </div>
     <div class="right-player-details {gameInfo.title}">
       {#if players[1].xHandle.length}
         <div class="x-handle">
-          @{players[1].xHandle}
+          <span class="at-tag">@</span>{players[1].xHandle}
         </div>
       {/if}
       {#if players[1].pronouns}
@@ -146,6 +146,11 @@
     grid-template-rows: 1fr 1fr;
     grid-gap: 5px;
     align-items: end;
+  }
+
+  .at-tag {
+    font-family: "sans-serif";
+    font-weight: bold;
   }
 
   .right-player-details .seed {
