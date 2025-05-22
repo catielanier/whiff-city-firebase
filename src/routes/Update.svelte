@@ -8,11 +8,12 @@
     QueuedMatch,
     ScoreboardsSimple,
     Teammate,
+    CountryList,
   } from "../utils/types";
   import { getDatabase, ref, get, update, set } from "firebase/database";
   import { derived, writable } from "svelte/store";
   import { firebase } from "../utils/firebase";
-  import { games, header } from "../utils/data";
+  import { games, getCountryList, header } from "../utils/data";
   import axios from "axios";
   import { getCode } from "country-list";
   import Select from "svelte-select";
@@ -27,6 +28,8 @@
   const gameInfo = writable<GameInfo>({ title: "sf6", round: "" });
   const isTeams = writable<boolean>(false);
   const isUserInput = writable<boolean>(false);
+
+  const countryList: CountryList[] = getCountryList();
 
   const tournamentUrl = writable<string>("");
   const tournamentId = writable<string>("");
@@ -561,6 +564,14 @@
                     on:input={() => isUserInput.set(true)}
                   />
                 </div>
+                <div class="country">
+                  <p>Country:</p>
+                  <Select
+                    items={countryList}
+                    bind:value={$players[0].country}
+                    on:input={() => isUserInput.set(true)}
+                  />
+                </div>
                 {#if $isTeams && $players[0].teammates?.length}
                   <div class="teammates">
                     <p>Teammates:</p>
@@ -684,6 +695,14 @@
                   <input
                     type="text"
                     bind:value={$players[1].playerName}
+                    on:input={() => isUserInput.set(true)}
+                  />
+                </div>
+                <div class="country">
+                  <p>Country:</p>
+                  <Select
+                    items={countryList}
+                    bind:value={$players[1].country}
                     on:input={() => isUserInput.set(true)}
                   />
                 </div>

@@ -87,3 +87,8 @@ export interface Queue {
   streamName: string;
   queue: QueuedMatch[];
 }
+
+export interface CountryList {
+  label: string;
+  value: string;
+}
