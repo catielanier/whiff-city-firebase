@@ -23,6 +23,7 @@
     "axios": "^1.7.7",
     "debounce": "^2.2.0",
     "firebase": "^11.0.1",
+    "svelte-flagpack": "^1.0.0",
     "svelte-routing": "^2.13.0"
   }
 }

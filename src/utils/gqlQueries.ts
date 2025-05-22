@@ -33,6 +33,9 @@ export const streamQueueQuery = `
                   type
                 }
                 genderPronoun
+                address {
+                  country
+                }
               }
             }
           }
@@ -48,4 +51,3 @@ export const streamQueueQuery = `
     }
 }
 `;
-

@@ -1179,6 +1179,11 @@ svelte-check@^4.0.4:
     picocolors "^1.0.0"
     sade "^1.7.4"
 
+svelte-flagpack@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-flagpack/-/svelte-flagpack-1.0.0.tgz#330afa150997b85776016335dc244587e535f318"
+  integrity sha512-125+Da/CSptnVfc5a5RxgpFi+Q1t5+Y34tjMm2nUGDUHzOz05gyzCLAFxqmA5vukoVcbkqWMjF8h7I97wSZOpg==
+
 svelte-hmr@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.16.0.tgz#9f345b7d1c1662f1613747ed7e82507e376c1716"
