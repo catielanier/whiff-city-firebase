@@ -35,6 +35,7 @@
       pronouns: "",
       xHandle: "",
       seed: 0,
+      country: "",
     };
   };
 
