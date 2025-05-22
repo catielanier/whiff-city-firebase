@@ -9,18 +9,13 @@
     ScoreboardsSimple,
     Teammate,
   } from "../utils/types";
-  import {
-    getDatabase,
-    ref,
-    onValue,
-    get,
-    update,
-    set,
-  } from "firebase/database";
+  import { getDatabase, ref, get, update, set } from "firebase/database";
   import { derived, writable } from "svelte/store";
   import { firebase } from "../utils/firebase";
   import { games, header } from "../utils/data";
   import axios from "axios";
+  import { getCode } from "country-list";
+  import Select from "svelte-select";
   import { streamQueueQuery, tournamentQuery } from "../utils/gqlQueries";
   import debounce from "debounce";
   import { Link } from "svelte-routing";
@@ -227,6 +222,12 @@
                 rightPlayerXHandleIndex
               ].externalUsername
             : "";
+        const leftPlayerCountry = getCode(
+          set.slots[0].entrant.participants[0].user.location.country ?? "",
+        );
+        const rightPlayerCountry = getCode(
+          set.slots[1].entrant.participants[0].user.location.country ?? "",
+        );
         const leftPlayer: Player = {
           id: 1,
           playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
@@ -242,6 +243,7 @@
             set.slots[0].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[0].entrant.initialSeedNum,
           teammates: [],
+          country: leftPlayerCountry,
         };
         const rightPlayer: Player = {
           id: 2,
@@ -257,6 +259,7 @@
             set.slots[1].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[1].entrant.initialSeedNum,
           teammates: [],
+          country: rightPlayerCountry,
         };
         $players[0] = leftPlayer;
         $players[1] = rightPlayer;
@@ -277,7 +280,6 @@
     const updateInfo: any = {
       streamQueue: [],
     };
-    console.log("updating stream queue");
     sets.forEach((set: any) => {
       const match: QueuedMatch = {
         id: set.id,
@@ -310,11 +312,9 @@
     set(reference, updateInfo.streamQueue)
       .then(() => {
         isLoading.set(false);
-        console.log("set");
       })
       .catch(() => {
         errMsg.set("Error updating stream queue. Try again.");
-        console.log("cannot set");
         isLoading.set(false);
       });
   };

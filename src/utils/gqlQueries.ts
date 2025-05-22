@@ -33,7 +33,7 @@ export const streamQueueQuery = `
                   type
                 }
                 genderPronoun
-                address {
+                location {
                   country
                 }
               }
