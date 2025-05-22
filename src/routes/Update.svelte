@@ -246,7 +246,11 @@
             set.slots[0].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[0].entrant.initialSeedNum,
           teammates: [],
-          country: leftPlayerCountry,
+          country: {
+            label:
+              set.slots[0].entrant.participants[0].user.location.country ?? "",
+            value: leftPlayerCountry,
+          },
         };
         const rightPlayer: Player = {
           id: 2,
@@ -262,7 +266,11 @@
             set.slots[1].entrant.participants[0].user.genderPronoun ?? "",
           seed: set.slots[1].entrant.initialSeedNum,
           teammates: [],
-          country: rightPlayerCountry,
+          country: {
+            label:
+              set.slots[1].entrant.participants[0].user.location.country ?? "",
+            value: rightPlayerCountry,
+          },
         };
         $players[0] = leftPlayer;
         $players[1] = rightPlayer;
@@ -569,7 +577,15 @@
                   <Select
                     items={countryList}
                     bind:value={$players[0].country}
-                    on:input={() => isUserInput.set(true)}
+                    on:input={(e) => {
+                      isUserInput.set(true);
+                      $players[0].country = e.detail.value;
+                      console.log($players[0].country);
+                    }}
+                    on:change={(e) => {
+                      $players[0].country = e.detail.value;
+                      console.log($players[0].country);
+                    }}
                   />
                 </div>
                 {#if $isTeams && $players[0].teammates?.length}
@@ -704,6 +720,7 @@
                     items={countryList}
                     bind:value={$players[1].country}
                     on:input={() => isUserInput.set(true)}
+                    on:change={(e) => ($players[1].country = e.detail.value)}
                   />
                 </div>
                 {#if $isTeams && $players[1].teammates?.length}

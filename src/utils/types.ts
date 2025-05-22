@@ -9,7 +9,7 @@ export interface Player {
   startId: string;
   teammates: Teammate[] | undefined;
   xHandle: string;
-  country: string | undefined;
+  country: CountryList | undefined;
 }
 
 export interface Commentator {

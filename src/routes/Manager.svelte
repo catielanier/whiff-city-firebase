@@ -35,7 +35,10 @@
       pronouns: "",
       xHandle: "",
       seed: 0,
-      country: "",
+      country: {
+        label: "",
+        value: "",
+      },
     };
   };
 
