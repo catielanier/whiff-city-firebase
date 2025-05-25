@@ -25,8 +25,8 @@
     "country-list": "^2.3.0",
     "debounce": "^2.2.0",
     "firebase": "^11.0.1",
-    "svelte-flagpack": "^1.0.0",
     "svelte-routing": "^2.13.0",
-    "svelte-select": "^5.8.3"
+    "svelte-select": "^5.8.3",
+    "svelte-svg-flags": "../svelte-svg-flags/"
   }
 }

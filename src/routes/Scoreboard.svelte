@@ -3,95 +3,108 @@
   import { getDatabase, ref, onValue } from "firebase/database";
   import type { GameInfo, Player } from "../utils/types";
   import { firebase } from "../utils/firebase";
+  import Flag from "svelte-svg-flags";
+  import { writable } from "svelte/store";
 
   export let id: string;
-  let players: Player[];
-  let gameInfo: GameInfo;
-  let isTeams: boolean = false;
+  let players = writable<Player[]>([]);
+  let gameInfo = writable<GameInfo>({ title: "sf6", round: "" });
+  let isTeams = writable<boolean>(false);
 
   onMount(() => {
     const database = getDatabase(firebase);
     const reference = ref(database, `/scoreboards/${id}`);
     onValue(reference, (res) => {
       const data = res.val();
-      players = data.players;
-      gameInfo = data.gameInfo;
-      isTeams = data.isTeams;
+      players.set(data.players);
+      gameInfo.set(data.gameInfo);
+      isTeams.set(data.isTeams);
     });
   });
 </script>
 
-{#if players?.length && gameInfo}
-  <div class="scoreboard {gameInfo.title}">
+{#if $players?.length && $gameInfo}
+  <div class="scoreboard {$gameInfo.title}">
     <div class="tournament-round">
       <p>
-        {gameInfo.round}
+        {$gameInfo.round}
       </p>
     </div>
     <div class="wrapper">
-      <div class="left-player {gameInfo.title}">
+      <div class="left-player {$gameInfo.title}">
         <div class="score">
-          <span class="score-inner">{players[0].score}</span>
+          <span class="score-inner">{$players[0].score}</span>
         </div>
         <div class="player-info">
           <span class="player">
-            <span class="team">{players[0].teamName}</span>
-            {players[0].playerName}
-            {#if players[0].isLosersBracket}
+            <span class="team">{$players[0].teamName}</span>
+            {$players[0].playerName}
+            {#if $players[0].isLosersBracket}
               <span class="losers-bracket">[L]</span>
             {/if}
           </span>
         </div>
       </div>
-      <div class="right-player {gameInfo.title}">
+      <div class="right-player {$gameInfo.title}">
         <div class="player-info">
           <span class="player">
-            <span class="team">{players[1].teamName}</span>
-            {players[1].playerName}
-            {#if players[1].isLosersBracket}
+            <span class="team">{$players[1].teamName}</span>
+            {$players[1].playerName}
+            {#if $players[1].isLosersBracket}
               <span class="losers-bracket">[L]</span>
             {/if}
           </span>
         </div>
         <div class="score">
-          <span class="score-inner">{players[1].score}</span>
+          <span class="score-inner">{$players[1].score}</span>
         </div>
       </div>
     </div>
-    <div class="left-player-details {gameInfo.title}">
+    <div class="left-player-details {$gameInfo.title}">
       <div class="seed">
-        Seed: #{players[0].seed}
+        Seed: #{$players[0].seed}
       </div>
-      {#if players[0].pronouns}
+      {#if $players[0].pronouns}
         <div class="pronouns">
-          {players[0].pronouns}
+          {$players[0].pronouns}
         </div>
       {/if}
-      {#if players[0].xHandle.length}
+      {#if $players[0].xHandle.length}
         <div class="x-handle">
-          <span class="at-tag">@</span>{players[0].xHandle}
+          <span class="at-tag">@</span>{$players[0].xHandle}
         </div>
       {/if}
     </div>
-    <div class="right-player-details {gameInfo.title}">
-      {#if players[1].xHandle.length}
+    <div class="right-player-details {$gameInfo.title}">
+      {#if $players[1].xHandle.length}
         <div class="x-handle">
-          <span class="at-tag">@</span>{players[1].xHandle}
+          <span class="at-tag">@</span>{$players[1].xHandle}
         </div>
       {/if}
-      {#if players[1].pronouns}
+      {#if $players[1].pronouns}
         <div class="pronouns">
-          {players[1].pronouns}
+          {$players[1].pronouns}
         </div>
       {/if}
       <div class="seed">
-        Seed: #{players[1].seed}
+        Seed: #{$players[1].seed}
       </div>
     </div>
-    {#if isTeams && players[0].teammates && players[1].teammates}
+    <div class="left-player-flags">
+      {#if $players[0].country && $players[0].country.value.length}
+        <Flag country={$players[0].country.value} width={48} />
+      {/if}
+    </div>
+    <div class="right-player-flags">
+      {#if $players[1].country && $players[1].country.value.length}
+        <Flag country={$players[1].country.value} width={48} />
+      {/if}
+    </div>
+    {#if $isTeams && $players[0].teammates && $players[1].teammates}
+      console.log({$players});
       <div class="left-team team-info">
         <h4>Teammates:</h4>
-        {#each players[0].teammates as player}
+        {#each $players[0].teammates as player}
           <p class="player {player.isEliminated && 'eliminated'}">
             {player.name || "&nbsp;"}
           </p>
@@ -99,7 +112,7 @@
       </div>
       <div class="right-team team-info">
         <h4>Teammates:</h4>
-        {#each players[1].teammates as player}
+        {#each $players[1].teammates as player}
           <p class="player {player.isEliminated && 'eliminated'}">
             {player.name || "&nbsp;"}
           </p>
