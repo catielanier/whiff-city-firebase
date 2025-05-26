@@ -148,6 +148,13 @@
     align-items: end;
   }
 
+  .left-player-details.ggst,
+  .right-player-details.ggst {
+    top: 50px;
+    grid-template-columns: repeat(4, 125px);
+    grid-template-rows: 1fr;
+  }
+
   .at-tag {
     font-family: "sans-serif";
     font-weight: bold;
@@ -159,6 +166,13 @@
 
   .right-player-details .pronouns {
     grid-column: 1;
+  }
+
+  .right-player-details.ggst .seed {
+    grid-column: 4;
+  }
+  .right-player-details.ggst .pronouns {
+    grid-column: 3;
   }
 
   .right-player-details.sf6 {
