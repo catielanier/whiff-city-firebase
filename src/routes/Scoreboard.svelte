@@ -23,7 +23,7 @@
 
 {#if players?.length && gameInfo}
   <div class="scoreboard {gameInfo.title}">
-    <div class="tournament-round">
+    <div class="tournament-round {gameInfo.title}">
       <p>
         {gameInfo.round}
       </p>
@@ -243,6 +243,10 @@
     margin-top: 5px;
   }
 
+  .scoreboard.cotw .tournament-round {
+    width: 180px;
+  }
+
   .wrapper,
   .left-player,
   .right-player {
@@ -325,6 +329,24 @@
     background: #ffed97;
     color: #000;
   }
+  .left-player.cotw .player-info {
+    margin-right: 150px;
+  }
+  .right-player.cotw .player-info {
+    margin-left: 150px;
+  }
+
+  .left-player.cotw .score {
+    margin-left: 120px;
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+  .right-player.cotw .score {
+    margin-right: 120px;
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+
   .left-player .player-info .team {
     color: #235ba8;
   }
