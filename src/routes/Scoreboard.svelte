@@ -154,6 +154,18 @@
     grid-template-columns: repeat(4, 125px);
     grid-template-rows: 1fr;
   }
+  .left-player-details.tekken8,
+  .right-player-details.tekken8 {
+    top: 120px;
+  }
+
+  .left-player-details.tekken8 {
+    left: 140px;
+  }
+
+  .right-player-details.tekken8 {
+    right: 80px;
+  }
 
   .at-tag {
     font-family: "sans-serif";
