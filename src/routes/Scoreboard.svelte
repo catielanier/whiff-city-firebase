@@ -159,6 +159,12 @@
     top: 120px;
   }
 
+  .left-player-details.bbcf,
+  .right-player-details.bbcf {
+    top: 140px;
+    grid-template-columns: repeat(4, 125px);
+  }
+
   .left-player-details.tekken8 {
     left: 140px;
   }
@@ -180,10 +186,11 @@
     grid-column: 1;
   }
 
-  .right-player-details.ggst .seed {
+  .right-player-details.ggst .seed,
+  .right-player-details.bbcf .seed {
     grid-column: 4;
   }
-  .right-player-details.ggst .pronouns {
+  .right-player-details.ggst .pronouns .right-player-details.bbcf .pronouns {
     grid-column: 3;
   }
 
