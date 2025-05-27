@@ -255,6 +255,10 @@
     width: 180px;
   }
 
+  .scoreboard.vf5 .tournament-round {
+    margin-top: 150px;
+  }
+
   .wrapper,
   .left-player,
   .right-player {
@@ -292,7 +296,12 @@
     transform: skewX(-30deg);
     margin-left: 27px;
   }
-
+  .left-player.vf5 .player-info {
+    margin-right: 65px;
+  }
+  .right-player.vf5 .player-info {
+    margin-left: 65px;
+  }
   .right-player.sf6 {
     grid-gap: 65px;
     grid-template-columns: 8fr 1fr;
