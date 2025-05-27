@@ -165,6 +165,19 @@
     grid-template-columns: repeat(4, 125px);
   }
 
+  .left-player-details.gbvs,
+  .right-player-details.gbvs {
+    top: 140px;
+  }
+
+  .left-player-details.gbvs {
+    left: 450px;
+  }
+
+  .right-player-details.gbvs {
+    right: 380px;
+  }
+
   .left-player-details.tekken8 {
     left: 140px;
   }
