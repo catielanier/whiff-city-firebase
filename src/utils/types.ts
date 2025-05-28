@@ -44,6 +44,7 @@ export interface GameInfo {
 export interface GameData {
   name: string;
   data: string;
+  width: number;
 }
 
 export interface QueuedPlayer {
