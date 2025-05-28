@@ -167,6 +167,8 @@
 
   .left-player-details.nidhogg,
   .right-player-details.nidhogg,
+  .left-player-details.arms,
+  .right-player-details.arms,
   .left-player-details.ki,
   .right-player-details.ki {
     top: 55px;
@@ -179,6 +181,13 @@
 
   .right-player-details.nidhogg {
     right: 200px;
+  }
+
+  .left-player-details.arms {
+    left: 160px;
+  }
+  .right-player-details.arms {
+    right: 90px;
   }
 
   .left-player-details.ki {
@@ -225,12 +234,13 @@
 
   .right-player-details.ggst .seed,
   .right-player-details.nidhogg .seed,
+  .right-player-details.arms .seed,
   .right-player-details.ki .seed,
   .right-player-details.bbcf .seed {
     grid-column: 4;
   }
   .right-player-details.ggst .pronouns,
-  .right-player-details.nidhogg .pronouns,
+  .right-player-details.arms .pronouns,
   .right-player-details.ki .pronouns,
   .right-player-details.bbcf .pronouns {
     grid-column: 3;
@@ -300,6 +310,10 @@
     margin-top: 150px;
   }
 
+  .scoreboard.arms .tournament-round {
+    margin-top: 130px;
+  }
+
   .wrapper,
   .left-player,
   .right-player {
@@ -342,6 +356,13 @@
   }
   .right-player.vf5 .player-info {
     margin-left: 65px;
+  }
+
+  .left-player.arms .player-info {
+    margin-right: 200px;
+  }
+  .right-player.arms .player-info {
+    margin-left: 200px;
   }
   .right-player.sf6 {
     grid-gap: 65px;
