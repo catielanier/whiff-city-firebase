@@ -1,13 +1,47 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, afterUpdate } from "svelte";
   import { getDatabase, ref, onValue } from "firebase/database";
   import type { GameInfo, Player } from "../utils/types";
   import { firebase } from "../utils/firebase";
+  import { games } from "../utils/data";
 
   export let id: string;
   let players: Player[];
   let gameInfo: GameInfo;
   let isTeams: boolean = false;
+
+  // Bind both outer .player and inner .player-inner
+  let leftPlayerEl: HTMLSpanElement;
+  let rightPlayerEl: HTMLSpanElement;
+  let leftPlayerInner: HTMLSpanElement;
+  let rightPlayerInner: HTMLSpanElement;
+
+  const resizeText = (
+    wrapperEl: HTMLElement,
+    innerEl: HTMLElement,
+    maxWidth: number,
+    direction: "left" | "right",
+  ) => {
+    requestAnimationFrame(() => {
+      if (!wrapperEl || !innerEl) return;
+
+      wrapperEl.style.maxWidth = `${maxWidth}px`;
+      const actualWidth = innerEl.offsetWidth;
+      console.log({ direction, maxWidth, actualWidth });
+      const scale = Math.min(maxWidth / actualWidth, 1);
+      innerEl.style.transform = `scale(${scale})`;
+      innerEl.style.transformOrigin = `${direction} center`;
+    });
+  };
+
+  const resizeAllText = () => {
+    const gameWidth: number | undefined = games.find(
+      (x) => x.data === gameInfo.title,
+    )?.width;
+    if (!gameWidth) return;
+    resizeText(leftPlayerEl, leftPlayerInner, gameWidth, "left");
+    resizeText(rightPlayerEl, rightPlayerInner, gameWidth, "right");
+  };
 
   onMount(() => {
     const database = getDatabase(firebase);
@@ -17,7 +51,16 @@
       players = data.players;
       gameInfo = data.gameInfo;
       isTeams = data.isTeams;
+      setTimeout(() => {
+        resizeAllText();
+      }, 0);
     });
+  });
+
+  afterUpdate(() => {
+    if (players?.length && gameInfo) {
+      resizeAllText();
+    }
   });
 </script>
 
@@ -34,23 +77,27 @@
           <span class="score-inner">{players[0].score}</span>
         </div>
         <div class="player-info">
-          <span class="player">
-            <span class="team">{players[0].teamName}</span>
-            {players[0].playerName}
-            {#if players[0].isLosersBracket}
-              <span class="losers-bracket">[L]</span>
-            {/if}
+          <span class="player" bind:this={leftPlayerEl}>
+            <span class="player-inner" bind:this={leftPlayerInner}>
+              <span class="team">{players[0].teamName}</span>
+              {players[0].playerName}
+              {#if players[0].isLosersBracket}
+                <span class="losers-bracket">[L]</span>
+              {/if}
+            </span>
           </span>
         </div>
       </div>
       <div class="right-player {gameInfo.title}">
         <div class="player-info">
-          <span class="player">
-            <span class="team">{players[1].teamName}</span>
-            {players[1].playerName}
-            {#if players[1].isLosersBracket}
-              <span class="losers-bracket">[L]</span>
-            {/if}
+          <span class="player" bind:this={rightPlayerEl}>
+            <span class="player-inner" bind:this={rightPlayerInner}>
+              <span class="team">{players[1].teamName}</span>
+              {players[1].playerName}
+              {#if players[1].isLosersBracket}
+                <span class="losers-bracket">[L]</span>
+              {/if}
+            </span>
           </span>
         </div>
         <div class="score">
@@ -411,6 +458,21 @@
   .player-info .player,
   .score-inner {
     display: block;
+  }
+  .player-info .player {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .left-player .player-info .player .player-inner {
+    display: inline-block;
+    transform-origin: left center;
+    white-space: nowrap;
+  }
+  .right-player .player-info .player .player-inner {
+    width: 100%;
+    display: inline-block;
+    transform-origin: right center;
+    white-space: nowrap;
   }
   .left-player .player-info .player,
   .left-player .score-inner {

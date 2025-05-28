@@ -23,7 +23,7 @@ export const games: readonly GameData[] = Object.freeze([
   },
   {
     name: "Street Fighter 6",
-    width: 463,
+    width: 458,
     data: "sf6",
   },
   {
