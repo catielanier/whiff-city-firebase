@@ -479,6 +479,14 @@
     white-space: nowrap;
     align-self: flex-end;
   }
+  .right-player.ggst .player-info .player-inner,
+  .right-player.sf33s .player-info .player-inner,
+  .right-player.ki .player-info .player-inner,
+  .right-player.nidhogg .player-info .player-inner,
+  .right-player.bbcf .player-info .player-inner,
+  .right-player.st .player-info .player-inner {
+    margin-right: -110px;
+  }
   .left-player .player-info .player,
   .left-player .score-inner {
     transform: skewX(-30deg);

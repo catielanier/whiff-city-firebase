@@ -29,7 +29,7 @@ export const games: readonly GameData[] = Object.freeze([
   {
     name: "Street Fighter III: 3rd Strike",
     width: 600,
-    data: "3s",
+    data: "sf33s",
   },
   {
     name: "Super Street Fighter II Turbo",
