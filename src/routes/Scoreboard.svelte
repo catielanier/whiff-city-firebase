@@ -175,8 +175,21 @@
     grid-template-columns: repeat(4, 125px);
   }
 
+  .left-player-details.llb,
+  .right-player-details.llb {
+    top: 25px;
+    grid-template-columns: repeat(4, 125px);
+  }
+
   .left-player-details.nidhogg {
     left: 270px;
+  }
+
+  .left-player-details.llb {
+    left: 90px;
+  }
+  .right-player-details.llb {
+    right: 20px;
   }
 
   .right-player-details.nidhogg {
@@ -235,12 +248,14 @@
   .right-player-details.ggst .seed,
   .right-player-details.nidhogg .seed,
   .right-player-details.arms .seed,
+  .right-player-details.llb .seed,
   .right-player-details.ki .seed,
   .right-player-details.bbcf .seed {
     grid-column: 4;
   }
   .right-player-details.ggst .pronouns,
   .right-player-details.arms .pronouns,
+  .right-player-details.llb .pronouns,
   .right-player-details.ki .pronouns,
   .right-player-details.bbcf .pronouns {
     grid-column: 3;
@@ -337,6 +352,19 @@
   .left-player.sf6 {
     grid-template-columns: 1fr 8fr;
     grid-gap: 65px;
+  }
+
+  .left-player.llb,
+  .right-player.llb {
+    margin-top: 70px;
+    font-size: 1.6rem;
+  }
+
+  .left-player.llb .player-info {
+    margin-right: 275px;
+  }
+  .right-player.llb .player-info {
+    margin-left: 275px;
   }
 
   .left-player.tekken8 {
