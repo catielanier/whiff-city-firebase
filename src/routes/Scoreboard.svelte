@@ -23,7 +23,7 @@
 
 {#if players?.length && gameInfo}
   <div class="scoreboard {gameInfo.title}">
-    <div class="tournament-round">
+    <div class="tournament-round {gameInfo.title}">
       <p>
         {gameInfo.round}
       </p>
@@ -148,6 +148,90 @@
     align-items: end;
   }
 
+  .left-player-details.ggst,
+  .right-player-details.ggst {
+    top: 50px;
+    grid-template-columns: repeat(4, 125px);
+    grid-template-rows: 1fr;
+  }
+  .left-player-details.tekken8,
+  .right-player-details.tekken8 {
+    top: 120px;
+  }
+
+  .left-player-details.bbcf,
+  .right-player-details.bbcf {
+    top: 140px;
+    grid-template-columns: repeat(4, 125px);
+  }
+
+  .left-player-details.nidhogg,
+  .right-player-details.nidhogg,
+  .left-player-details.arms,
+  .right-player-details.arms,
+  .left-player-details.ki,
+  .right-player-details.ki {
+    top: 55px;
+    grid-template-columns: repeat(4, 125px);
+  }
+
+  .left-player-details.llb,
+  .right-player-details.llb {
+    top: 25px;
+    grid-template-columns: repeat(4, 125px);
+  }
+
+  .left-player-details.nidhogg {
+    left: 270px;
+  }
+
+  .left-player-details.llb {
+    left: 90px;
+  }
+  .right-player-details.llb {
+    right: 20px;
+  }
+
+  .right-player-details.nidhogg {
+    right: 200px;
+  }
+
+  .left-player-details.arms {
+    left: 160px;
+  }
+  .right-player-details.arms {
+    right: 90px;
+  }
+
+  .left-player-details.ki {
+    left: 170px;
+  }
+
+  .right-player-details.ki {
+    right: 100px;
+  }
+
+  .left-player-details.gbvs,
+  .right-player-details.gbvs {
+    top: 140px;
+  }
+
+  .left-player-details.gbvs {
+    left: 450px;
+  }
+
+  .right-player-details.gbvs {
+    right: 380px;
+  }
+
+  .left-player-details.tekken8 {
+    left: 140px;
+  }
+
+  .right-player-details.tekken8 {
+    right: 80px;
+  }
+
   .at-tag {
     font-family: "sans-serif";
     font-weight: bold;
@@ -159,6 +243,22 @@
 
   .right-player-details .pronouns {
     grid-column: 1;
+  }
+
+  .right-player-details.ggst .seed,
+  .right-player-details.nidhogg .seed,
+  .right-player-details.arms .seed,
+  .right-player-details.llb .seed,
+  .right-player-details.ki .seed,
+  .right-player-details.bbcf .seed {
+    grid-column: 4;
+  }
+  .right-player-details.ggst .pronouns,
+  .right-player-details.arms .pronouns,
+  .right-player-details.llb .pronouns,
+  .right-player-details.ki .pronouns,
+  .right-player-details.bbcf .pronouns {
+    grid-column: 3;
   }
 
   .right-player-details.sf6 {
@@ -217,6 +317,18 @@
     margin-top: 5px;
   }
 
+  .scoreboard.cotw .tournament-round {
+    width: 180px;
+  }
+
+  .scoreboard.vf5 .tournament-round {
+    margin-top: 150px;
+  }
+
+  .scoreboard.arms .tournament-round {
+    margin-top: 130px;
+  }
+
   .wrapper,
   .left-player,
   .right-player {
@@ -242,6 +354,19 @@
     grid-gap: 65px;
   }
 
+  .left-player.llb,
+  .right-player.llb {
+    margin-top: 70px;
+    font-size: 1.6rem;
+  }
+
+  .left-player.llb .player-info {
+    margin-right: 275px;
+  }
+  .right-player.llb .player-info {
+    margin-left: 275px;
+  }
+
   .left-player.tekken8 {
     grid-template-columns: 1fr 8fr;
   }
@@ -254,7 +379,19 @@
     transform: skewX(-30deg);
     margin-left: 27px;
   }
+  .left-player.vf5 .player-info {
+    margin-right: 65px;
+  }
+  .right-player.vf5 .player-info {
+    margin-left: 65px;
+  }
 
+  .left-player.arms .player-info {
+    margin-right: 200px;
+  }
+  .right-player.arms .player-info {
+    margin-left: 200px;
+  }
   .right-player.sf6 {
     grid-gap: 65px;
     grid-template-columns: 8fr 1fr;
@@ -299,6 +436,24 @@
     background: #ffed97;
     color: #000;
   }
+  .left-player.cotw .player-info {
+    margin-right: 150px;
+  }
+  .right-player.cotw .player-info {
+    margin-left: 150px;
+  }
+
+  .left-player.cotw .score {
+    margin-left: 120px;
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+  .right-player.cotw .score {
+    margin-right: 120px;
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+
   .left-player .player-info .team {
     color: #235ba8;
   }
