@@ -53,6 +53,10 @@ export const games: readonly GameData[] = Object.freeze([
     name: "ARMS",
     data: "arms",
   },
+  {
+    name: "Lethal League Blaze",
+    data: "llb",
+  },
 ]);
 
 export const header = Object.freeze({
