@@ -165,6 +165,20 @@
     grid-template-columns: repeat(4, 125px);
   }
 
+  .left-player-details.nidhogg,
+  .right-player-details.nidhogg {
+    top: 55px;
+    grid-template-columns: repeat(4, 125px);
+  }
+
+  .left-player-details.nidhogg {
+    left: 270px;
+  }
+
+  .right-player-details.nidhogg {
+    right: 200px;
+  }
+
   .left-player-details.gbvs,
   .right-player-details.gbvs {
     top: 140px;
@@ -200,10 +214,12 @@
   }
 
   .right-player-details.ggst .seed,
+  .right-player-details.nidhogg .seed,
   .right-player-details.bbcf .seed {
     grid-column: 4;
   }
   .right-player-details.ggst .pronouns,
+  .right-player-details.nidhogg .pronouns,
   .right-player-details.bbcf .pronouns {
     grid-column: 3;
   }
