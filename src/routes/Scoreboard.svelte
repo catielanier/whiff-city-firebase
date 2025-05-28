@@ -166,7 +166,9 @@
   }
 
   .left-player-details.nidhogg,
-  .right-player-details.nidhogg {
+  .right-player-details.nidhogg,
+  .left-player-details.ki,
+  .right-player-details.ki {
     top: 55px;
     grid-template-columns: repeat(4, 125px);
   }
@@ -177,6 +179,14 @@
 
   .right-player-details.nidhogg {
     right: 200px;
+  }
+
+  .left-player-details.ki {
+    left: 170px;
+  }
+
+  .right-player-details.ki {
+    right: 100px;
   }
 
   .left-player-details.gbvs,
@@ -215,11 +225,13 @@
 
   .right-player-details.ggst .seed,
   .right-player-details.nidhogg .seed,
+  .right-player-details.ki .seed,
   .right-player-details.bbcf .seed {
     grid-column: 4;
   }
   .right-player-details.ggst .pronouns,
   .right-player-details.nidhogg .pronouns,
+  .right-player-details.ki .pronouns,
   .right-player-details.bbcf .pronouns {
     grid-column: 3;
   }
