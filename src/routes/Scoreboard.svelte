@@ -27,7 +27,6 @@
 
       wrapperEl.style.maxWidth = `${maxWidth}px`;
       const actualWidth = innerEl.offsetWidth;
-      console.log({ direction, maxWidth, actualWidth });
       const scale = Math.min(maxWidth / actualWidth, 1);
       innerEl.style.transform = `scale(${scale})`;
       innerEl.style.transformOrigin = `${direction} center`;
