@@ -455,24 +455,29 @@
   .right-player.tekken8 .player-info {
     margin-left: 230px;
   }
-  .player-info .player,
   .score-inner {
     display: block;
   }
   .player-info .player {
-    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
     white-space: nowrap;
+  }
+
+  .right-player .player {
+    justify-content: flex-end;
   }
   .left-player .player-info .player .player-inner {
     display: inline-block;
     transform-origin: left center;
     white-space: nowrap;
+    align-self: flex-start;
   }
   .right-player .player-info .player .player-inner {
-    width: 100%;
     display: inline-block;
     transform-origin: right center;
     white-space: nowrap;
+    align-self: flex-end;
   }
   .left-player .player-info .player,
   .left-player .score-inner {
