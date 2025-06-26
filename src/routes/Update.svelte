@@ -1,29 +1,22 @@
 <script lang="ts">
+  import axios from "axios";
+  import debounce from "debounce";
+  import { get, getDatabase, ref, set, update } from "firebase/database";
   import { onMount } from "svelte";
+  import { Link } from "svelte-routing";
+  import { derived, writable } from "svelte/store";
+  import { games, header } from "../utils/data";
+  import { firebase } from "../utils/firebase";
+  import { streamQueueQuery, tournamentQuery } from "../utils/gqlQueries";
   import type {
     Commentator,
-    Player,
-    UpdateData,
     GameInfo,
+    Player,
     QueuedMatch,
     ScoreboardsSimple,
     Teammate,
+    UpdateData,
   } from "../utils/types";
-  import {
-    getDatabase,
-    ref,
-    onValue,
-    get,
-    update,
-    set,
-  } from "firebase/database";
-  import { derived, writable } from "svelte/store";
-  import { firebase } from "../utils/firebase";
-  import { games, header } from "../utils/data";
-  import axios from "axios";
-  import { streamQueueQuery, tournamentQuery } from "../utils/gqlQueries";
-  import debounce from "debounce";
-  import { Link } from "svelte-routing";
 
   const players = writable<Player[]>([]);
   const commentators = writable<Commentator[]>([]);
@@ -45,7 +38,7 @@
 
   const copyScene = (scene: string): void => {
     navigator.clipboard.writeText(
-      `${window.location.origin}/${scene}/${$scoreboardId}`,
+      `${window.location.origin}/${scene}/${$scoreboardId}`
     );
   };
 
@@ -81,7 +74,7 @@
         commentators: $commentators,
         gameInfo: $gameInfo,
       };
-    },
+    }
   );
 
   const debouncedUpdate = debounce(updateScoreboard, 3000);
@@ -109,7 +102,7 @@
         },
         {
           headers: header,
-        },
+        }
       )
       .then((res) => {
         tournamentId.set(res.data.data.tournament.id);
@@ -179,99 +172,63 @@
     updateScoreboard();
   };
 
-  const retrieveStreamQueue = (
-    shouldUpdateScoreboard: boolean = true,
-  ): void => {
+  function retrieveStreamQueue(shouldUpdateScoreboard = true): void {
     isLoading.set(true);
     axios
       .post(
         "https://api.start.gg/gql/alpha",
-        {
-          query: streamQueueQuery,
-          variables: { tournamentId: $tournamentId },
-        },
-        {
-          headers: header,
-        },
+        { query: streamQueueQuery, variables: { tournamentId: $tournamentId } },
+        { headers: header }
       )
       .then((res) => {
-        const streamIndex: number = res.data.data.streamQueue.findIndex(
-          (x: any) => {
-            return (
-              x.stream.streamName.toLowerCase() === $streamChannel.toLowerCase()
-            );
-          },
+        const queue = res.data.data.streamQueue;
+        const idx = queue.findIndex(
+          (x: any) =>
+            x.stream.streamName.toLowerCase() === $streamChannel.toLowerCase()
         );
-        const set = res.data.data.streamQueue[streamIndex].sets[0];
-        const leftPlayerXHandleIndex: number =
-          set.slots[0].entrant.participants[0].user.authorizations?.findIndex(
-            (x) => {
-              return x.type === "TWITTER";
-            },
-          ) ?? -1;
-        const leftPlayerXHandle: string =
-          leftPlayerXHandleIndex > -1
-            ? set.slots[0].entrant.participants[0].user.authorizations[
-                leftPlayerXHandleIndex
-              ].externalUsername
-            : "";
-        const rightPlayerXHandleIndex: number =
-          set.slots[1].entrant.participants[0].user.authorizations?.findIndex(
-            (x) => {
-              return x.type === "TWITTER";
-            },
-          ) ?? -1;
-        const rightPlayerXHandle: string =
-          rightPlayerXHandleIndex > -1
-            ? set.slots[1].entrant.participants[0].user.authorizations[
-                rightPlayerXHandleIndex
-              ].externalUsername
-            : "";
-        const leftPlayer: Player = {
-          id: 1,
-          playerName: set.slots[0].entrant.name.replace(/^.*\s\|\s/, ""),
-          teamName: set.slots[0].entrant.name.includes(" | ")
-            ? set.slots[0].entrant.name.replace(/\|.*/, "")
-            : "",
-          score: 0,
-          isLosersBracket: false,
-          startId:
-            res.data.data.streamQueue[streamIndex].sets[0].slots[0].entrant.id,
-          xHandle: leftPlayerXHandle,
-          pronouns:
-            set.slots[0].entrant.participants[0].user.genderPronoun ?? "",
-          seed: set.slots[0].entrant.initialSeedNum,
-          teammates: [],
-        };
-        const rightPlayer: Player = {
-          id: 2,
-          playerName: set.slots[1].entrant.name.replace(/^.*\s\|\s/, ""),
-          teamName: set.slots[1].entrant.name.includes(" | ")
-            ? set.slots[1].entrant.name.replace(/\|.*/, "")
-            : "",
-          score: 0,
-          isLosersBracket: false,
-          startId: set.slots[1].entrant.id,
-          xHandle: rightPlayerXHandle,
-          pronouns:
-            set.slots[1].entrant.participants[0].user.genderPronoun ?? "",
-          seed: set.slots[1].entrant.initialSeedNum,
-          teammates: [],
-        };
-        $players[0] = leftPlayer;
-        $players[1] = rightPlayer;
-        currentSetId.set(set.id);
-        updateStreamQueue(res.data.data.streamQueue[streamIndex].sets);
-      })
-      .finally(() => {
+        const set0 = queue[idx].sets[0];
+
+        currentSetId.set(set0.id);
+        updateStreamQueue(queue[idx].sets);
+
         if (shouldUpdateScoreboard) {
+          const makePlayer = (i: 0 | 1): Player => {
+            const s = set0.slots[i];
+            const tw =
+              s.entrant.participants[0].user.authorizations?.find(
+                (a: any) => a.type === "TWITTER"
+              )?.externalUsername ?? "";
+            return {
+              id: i + 1,
+              playerName: s.entrant.name.replace(/^.*\s\|\s/, ""),
+              teamName: s.entrant.name.includes(" | ")
+                ? s.entrant.name.replace(/\|.*/, "")
+                : "",
+              score: 0,
+              isLosersBracket: false,
+              startId: s.entrant.id,
+              xHandle: tw,
+              pronouns: s.entrant.participants[0].user.genderPronoun ?? "",
+              seed: s.entrant.initialSeedNum,
+              teammates: [],
+            };
+          };
+
+          const leftPlayer = makePlayer(0);
+          const rightPlayer = makePlayer(1);
+
+          // ✅ Reactive update: replace the whole array
+          players.set([leftPlayer, rightPlayer]);
           updateScoreboard();
         }
       })
       .catch((err) => {
         errMsg.set(err.message);
+      })
+      .finally(() => {
+        isLoading.set(false);
       });
-  };
+  }
 
   const updateStreamQueue = (sets: any[]): void => {
     const updateInfo: any = {
@@ -388,10 +345,10 @@
         },
         {
           headers: header,
-        },
+        }
       )
       .then((_) =>
-        $tournamentId ? retrieveStreamQueue() : retrieveTournament(),
+        $tournamentId ? retrieveStreamQueue() : retrieveTournament()
       )
       .catch((err) => errMsg.set(err.message));
   };
@@ -456,7 +413,7 @@
           (key) => ({
             id: key,
             scoreboardName: data[key].scoreboardName,
-          }),
+          })
         );
         scoreboards.set(scoreboardList);
       } else {
