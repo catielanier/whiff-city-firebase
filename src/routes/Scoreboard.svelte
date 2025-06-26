@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { onMount, afterUpdate } from "svelte";
-  import { getDatabase, ref, onValue } from "firebase/database";
-  import type { GameInfo, Player } from "../utils/types";
-  import { firebase } from "../utils/firebase";
+  import { getDatabase, onValue, ref } from "firebase/database";
+  import { afterUpdate, onMount } from "svelte";
   import { games } from "../utils/data";
+  import { firebase } from "../utils/firebase";
+  import type { GameInfo, Player } from "../utils/types";
 
   export let id: string;
   let players: Player[];
@@ -20,7 +20,7 @@
     wrapperEl: HTMLElement,
     innerEl: HTMLElement,
     maxWidth: number,
-    direction: "left" | "right",
+    direction: "left" | "right"
   ) => {
     requestAnimationFrame(() => {
       if (!wrapperEl || !innerEl) return;
@@ -35,7 +35,7 @@
 
   const resizeAllText = () => {
     const gameWidth: number | undefined = games.find(
-      (x) => x.data === gameInfo.title,
+      (x) => x.data === gameInfo.title
     )?.width;
     if (!gameWidth) return;
     resizeText(leftPlayerEl, leftPlayerInner, gameWidth, "left");
@@ -301,6 +301,7 @@
   }
   .right-player-details.ggst .pronouns,
   .right-player-details.arms .pronouns,
+  .right-player-details.nidhogg .pronouns,
   .right-player-details.llb .pronouns,
   .right-player-details.ki .pronouns,
   .right-player-details.bbcf .pronouns {
@@ -330,9 +331,17 @@
     color: #000;
   }
 
-  .right-player-details .x-handle {
+  .right-player-details:not(.ggst):not(.nidhogg):not(.ki):not(.llb):not(
+      .bbcf
+    ):not(.arms)
+    .x-handle {
     grid-row: 2;
     grid-column: span 2;
+  }
+
+  .right-player-details:is(.ggst, .nidhogg, .ki, .llb, .arms, .bbcf) .x-handle {
+    grid-column: span 2;
+    padding: 4px 8px;
   }
 
   .left-player-details .seed,
