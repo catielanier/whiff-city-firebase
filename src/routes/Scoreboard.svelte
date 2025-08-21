@@ -104,36 +104,38 @@
         </div>
       </div>
     </div>
-    <div class="left-player-details {gameInfo.title}">
-      <div class="seed">
-        Seed: #{players[0].seed}
+    {#if !isTeams}
+      <div class="left-player-details {gameInfo.title}">
+        <div class="seed">
+          Seed: #{players[0].seed}
+        </div>
+        {#if players[0].pronouns}
+          <div class="pronouns">
+            {players[0].pronouns}
+          </div>
+        {/if}
+        {#if players[0].xHandle.length}
+          <div class="x-handle">
+            <span class="at-tag">@</span>{players[0].xHandle}
+          </div>
+        {/if}
       </div>
-      {#if players[0].pronouns}
-        <div class="pronouns">
-          {players[0].pronouns}
+      <div class="right-player-details {gameInfo.title}">
+        {#if players[1].xHandle.length}
+          <div class="x-handle">
+            <span class="at-tag">@</span>{players[1].xHandle}
+          </div>
+        {/if}
+        {#if players[1].pronouns}
+          <div class="pronouns">
+            {players[1].pronouns}
+          </div>
+        {/if}
+        <div class="seed">
+          Seed: #{players[1].seed}
         </div>
-      {/if}
-      {#if players[0].xHandle.length}
-        <div class="x-handle">
-          <span class="at-tag">@</span>{players[0].xHandle}
-        </div>
-      {/if}
-    </div>
-    <div class="right-player-details {gameInfo.title}">
-      {#if players[1].xHandle.length}
-        <div class="x-handle">
-          <span class="at-tag">@</span>{players[1].xHandle}
-        </div>
-      {/if}
-      {#if players[1].pronouns}
-        <div class="pronouns">
-          {players[1].pronouns}
-        </div>
-      {/if}
-      <div class="seed">
-        Seed: #{players[1].seed}
       </div>
-    </div>
+    {/if}
     {#if isTeams && players[0].teammates && players[1].teammates}
       <div class="left-team team-info">
         <h4>Teammates:</h4>
