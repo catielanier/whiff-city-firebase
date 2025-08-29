@@ -264,6 +264,11 @@
     top: 140px;
   }
 
+  .left-player-details.dbfz,
+  .right-player-details.dbfz {
+    top: 165px;
+  }
+
   .left-player-details.gbvs {
     left: 450px;
   }
