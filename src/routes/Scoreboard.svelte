@@ -436,6 +436,10 @@
     transform: skewX(-30deg);
     margin-left: 27px;
   }
+
+  .right-player.sf6 .player-info {
+    padding-left: 15px;
+  }
   .left-player.vf5 .player-info {
     margin-right: 65px;
   }
@@ -595,9 +599,9 @@
   }
 
   .team-info {
-    background: #eb0405;
-    color: #fff;
-    width: 150px;
+    background: #ffed97;
+    color: #000;
+    width: 200px;
     font-size: 1.2rem;
     position: absolute;
     top: 120px;
@@ -609,7 +613,7 @@
   }
 
   .team-info h4 {
-    background-color: #ffed97;
+    background-color: #e1bb00;
     color: #eb0405;
   }
   .left-team {
@@ -619,7 +623,7 @@
     right: -80px;
   }
   .team-info p.eliminated {
-    text-decoration: line-through;
-    color: #ccc;
+    background: #575b57;
+    color: #fff;
   }
 </style>
