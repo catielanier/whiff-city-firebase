@@ -106,10 +106,12 @@
     </div>
     {#if !isTeams}
       <div class="left-player-details {gameInfo.title}">
-        <div class="seed">
-          Seed: #{players[0].seed}
-        </div>
-        {#if players[0].pronouns}
+        {#if players[0].seed && players[0].seed > 0}
+          <div class="seed">
+            Seed: #{players[0].seed}
+          </div>
+        {/if}
+        {#if players[0].pronouns && players[0].pronouns.length}
           <div class="pronouns">
             {players[0].pronouns}
           </div>
@@ -126,14 +128,16 @@
             <span class="at-tag">@</span>{players[1].xHandle}
           </div>
         {/if}
-        {#if players[1].pronouns}
+        {#if players[1].pronouns && players[1].pronouns.length}
           <div class="pronouns">
             {players[1].pronouns}
           </div>
         {/if}
-        <div class="seed">
-          Seed: #{players[1].seed}
-        </div>
+        {#if players[1].seed && players[1].seed > 0}
+          <div class="seed">
+            Seed: #{players[1].seed}
+          </div>
+        {/if}
       </div>
     {/if}
     {#if isTeams && players[0].teammates && players[1].teammates}
