@@ -527,9 +527,35 @@
     padding-right: 15px;
   }
   .score {
-    background: #eb0405;
+    position: relative;
+    background: none;
+    padding-left: -15px;
     color: #fff;
   }
+  .left-player .score::before {
+    position: absolute;
+    content: " ";
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    background: #eb0405;
+    transform: skewX(30deg);
+    z-index: -1;
+  }
+
+  .right-player .score::before {
+    position: absolute;
+    content: " ";
+    top: 0;
+    right: 0px;
+    width: 100%;
+    bottom: 0;
+    background: #eb0405;
+    transform: skewX(-30deg);
+    z-index: -1;
+  }
+
   .left-player .player-info {
     background: #ffed97;
     color: #000;
@@ -622,8 +648,8 @@
   }
 
   .team-info h4 {
-    background-color: #e1bb00;
-    color: #eb0405;
+    background-color: #235ba8;
+    color: #fff;
   }
   .left-team {
     left: 0;
