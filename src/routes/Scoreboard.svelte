@@ -557,8 +557,20 @@
   }
 
   .left-player .player-info {
-    background: #ffed97;
+    background: none;
+    position: relative;
     color: #000;
+  }
+  .left-player .player-info::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    content: " ";
+    background: #ffed97;
+    transform: skewX(30deg);
+    z-index: -1;
   }
   .left-player.cotw .player-info {
     margin-right: 150px;
@@ -582,8 +594,20 @@
     color: #235ba8;
   }
   .right-player .player-info {
-    background: #235ba8;
+    position: relative;
+    background: none;
     color: #fff;
+  }
+  .right-player .player-info::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #235ba8;
+    content: " ";
+    transform: skewX(-30deg);
+    z-index: -1;
   }
   .right-player .team {
     color: #ffed97;
