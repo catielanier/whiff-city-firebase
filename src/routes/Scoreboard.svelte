@@ -412,7 +412,7 @@
   }
   .left-player {
     grid-template-columns: 1fr 6fr;
-    transform: skewX(30deg);
+    /* transform: skewX(30deg); */
     margin-right: 25px;
   }
   .left-player.sf6 {
@@ -442,7 +442,7 @@
   }
   .right-player {
     grid-template-columns: 6fr 1fr;
-    transform: skewX(-30deg);
+    /* transform: skewX(-30deg); */
     margin-left: 27px;
   }
 
@@ -510,14 +510,14 @@
   .right-player.st .player-info .player-inner {
     margin-right: -110px;
   }
-  .left-player .player-info .player,
+  /* .left-player .player-info .player,
   .left-player .score-inner {
     transform: skewX(-30deg);
   }
   .right-player .player-info .player,
   .right-player .score-inner {
     transform: skewX(30deg);
-  }
+  } */
   .left-player .player-info {
     text-align: left;
     padding-left: 15px;
