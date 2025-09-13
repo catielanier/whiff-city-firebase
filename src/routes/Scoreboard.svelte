@@ -508,6 +508,12 @@
   .right-player.st .player-info .player-inner {
     margin-right: -110px;
   }
+  .right-player.dbfz .player-info .player-inner {
+    margin-right: -70px;
+  }
+  .left-player.dbfz .player-info {
+    padding-right: 100px;
+  }
   .left-player .player-info {
     text-align: left;
     padding-left: 15px;
