@@ -210,6 +210,16 @@
   .right-player-details.tekken8 {
     top: 120px;
   }
+  .left-player-details.xxko,
+  .right-player-details.xxko {
+    top: 135px;
+  }
+  .left-player-details.xxko {
+    left: 200px;
+  }
+  .right-player-details.xxko {
+    right: 130px;
+  }
 
   .left-player-details.bbcf,
   .right-player-details.bbcf {
@@ -368,12 +378,14 @@
   }
 
   .scoreboard.bbcf,
-  .scoreboard.gbvs {
+  .scoreboard.gbvs,
+  .scoreboard.xxko {
     font-size: 25px;
   }
 
   .scoreboard.bbcf .tournament-round,
-  .scoreboard.gbvs .tournament-round {
+  .scoreboard.gbvs .tournament-round,
+  .scoreboard.xxko .tournament-round {
     height: 38px;
   }
   .scoreboard .tournament-round {
@@ -384,6 +396,7 @@
     margin-top: 10px;
   }
   .scoreboard.bbcf .tournament-round p,
+  .scoreboard.xxko .tournament-round p,
   .scoreboard.gbvs .tournament-round p {
     margin-top: 5px;
   }
@@ -513,6 +526,7 @@
   .right-player.st .player-info .player-inner {
     margin-right: -110px;
   }
+  .right-player.xxko .player-info .player-inner,
   .right-player.dbfz .player-info .player-inner {
     margin-right: -70px;
   }
