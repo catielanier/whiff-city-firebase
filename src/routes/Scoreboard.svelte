@@ -210,6 +210,16 @@
   .right-player-details.tekken8 {
     top: 120px;
   }
+  .left-player-details.xxko,
+  .right-player-details.xxko {
+    top: 135px;
+  }
+  .left-player-details.xxko {
+    left: 200px;
+  }
+  .right-player-details.xxko {
+    right: 130px;
+  }
 
   .left-player-details.bbcf,
   .right-player-details.bbcf {
@@ -302,6 +312,11 @@
     grid-column: 1;
   }
 
+  .left-player-details.uni2,
+  .right-player-details.uni2 {
+    top: 125px;
+  }
+
   .right-player-details.ggst .seed,
   .right-player-details.nidhogg .seed,
   .right-player-details.arms .seed,
@@ -363,12 +378,14 @@
   }
 
   .scoreboard.bbcf,
-  .scoreboard.gbvs {
+  .scoreboard.gbvs,
+  .scoreboard.xxko {
     font-size: 25px;
   }
 
   .scoreboard.bbcf .tournament-round,
-  .scoreboard.gbvs .tournament-round {
+  .scoreboard.gbvs .tournament-round,
+  .scoreboard.xxko .tournament-round {
     height: 38px;
   }
   .scoreboard .tournament-round {
@@ -379,6 +396,7 @@
     margin-top: 10px;
   }
   .scoreboard.bbcf .tournament-round p,
+  .scoreboard.xxko .tournament-round p,
   .scoreboard.gbvs .tournament-round p {
     margin-top: 5px;
   }
@@ -412,7 +430,6 @@
   }
   .left-player {
     grid-template-columns: 1fr 6fr;
-    transform: skewX(30deg);
     margin-right: 25px;
   }
   .left-player.sf6 {
@@ -442,7 +459,6 @@
   }
   .right-player {
     grid-template-columns: 6fr 1fr;
-    transform: skewX(-30deg);
     margin-left: 27px;
   }
 
@@ -510,13 +526,16 @@
   .right-player.st .player-info .player-inner {
     margin-right: -110px;
   }
-  .left-player .player-info .player,
-  .left-player .score-inner {
-    transform: skewX(-30deg);
+  .right-player.xxko .player-info .player-inner,
+  .right-player.dbfz .player-info .player-inner {
+    margin-right: -70px;
   }
-  .right-player .player-info .player,
-  .right-player .score-inner {
-    transform: skewX(30deg);
+
+  .right-player.uni2 .player-info .player-inner {
+    margin-right: -110px;
+  }
+  .left-player.dbfz .player-info {
+    padding-right: 100px;
   }
   .left-player .player-info {
     text-align: left;
@@ -527,12 +546,50 @@
     padding-right: 15px;
   }
   .score {
-    background: #eb0405;
+    position: relative;
+    background: none;
+    padding-left: -15px;
     color: #fff;
   }
+  .left-player .score::before {
+    position: absolute;
+    content: " ";
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    background: #eb0405;
+    transform: skewX(30deg);
+    z-index: -1;
+  }
+
+  .right-player .score::before {
+    position: absolute;
+    content: " ";
+    top: 0;
+    right: 0px;
+    width: 100%;
+    bottom: 0;
+    background: #eb0405;
+    transform: skewX(-30deg);
+    z-index: -1;
+  }
+
   .left-player .player-info {
-    background: #ffed97;
+    background: none;
+    position: relative;
     color: #000;
+  }
+  .left-player .player-info::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    content: " ";
+    background: #ffed97;
+    transform: skewX(30deg);
+    z-index: -1;
   }
   .left-player.cotw .player-info {
     margin-right: 150px;
@@ -556,8 +613,20 @@
     color: #235ba8;
   }
   .right-player .player-info {
-    background: #235ba8;
+    position: relative;
+    background: none;
     color: #fff;
+  }
+  .right-player .player-info::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #235ba8;
+    content: " ";
+    transform: skewX(-30deg);
+    z-index: -1;
   }
   .right-player .team {
     color: #ffed97;
@@ -622,8 +691,8 @@
   }
 
   .team-info h4 {
-    background-color: #e1bb00;
-    color: #eb0405;
+    background-color: #235ba8;
+    color: #fff;
   }
   .left-team {
     left: 0;
