@@ -75,6 +75,11 @@ export const games: readonly GameData[] = Object.freeze([
     name: "Dragonball FighterZ",
     width: 640,
     data: "dbfz"
+  },
+  {
+    name: "2XKO",
+    width: 640,
+    data: "xxko"
   }
 ]);
 

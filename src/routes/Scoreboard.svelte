@@ -302,6 +302,11 @@
     grid-column: 1;
   }
 
+  .left-player-details.uni2,
+  .right-player-details.uni2 {
+    top: 125px;
+  }
+
   .right-player-details.ggst .seed,
   .right-player-details.nidhogg .seed,
   .right-player-details.arms .seed,
@@ -510,6 +515,10 @@
   }
   .right-player.dbfz .player-info .player-inner {
     margin-right: -70px;
+  }
+
+  .right-player.uni2 .player-info .player-inner {
+    margin-right: -110px;
   }
   .left-player.dbfz .player-info {
     padding-right: 100px;
