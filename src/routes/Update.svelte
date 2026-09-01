@@ -277,13 +277,18 @@
   };
 
   const clearScores = (e: Event): void => {
-    e.preventDefault();
-    $players.forEach((player: Player): void => {
-      player.score = 0;
-      player.isLosersBracket = false;
-    });
-    updateScoreboard();
-  };
+  e.preventDefault();
+
+  players.update((currentPlayers) =>
+    currentPlayers.map((player) => ({
+      ...player,
+      score: 0,
+      isLosersBracket: false,
+    }))
+  );
+
+  updateScoreboard();
+};
 
   const updateScore = (side: string, operand: "+" | "-"): void => {
     switch (side) {
