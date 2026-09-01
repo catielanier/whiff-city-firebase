@@ -50,6 +50,7 @@ export interface GameData {
 export interface QueuedPlayer {
   name: string;
   teamName: string;
+  isResolved: boolean;
 }
 
 export interface QueuedMatch {
