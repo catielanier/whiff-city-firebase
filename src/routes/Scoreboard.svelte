@@ -183,6 +183,15 @@
     grid-template-rows: 1fr 1fr;
     grid-gap: 5px;
   }
+  .left-player-details.avatar {
+	  top: 103px;
+	  left: 175px;
+  }
+  .right-player-details.avatar {
+	  top: 103px;
+	  right: 105px;
+  }
+
 
   .left-player-details.sf6 {
     top: 110px;
@@ -365,9 +374,19 @@
     grid-column: span 2;
   }
 
-  .right-player-details:is(.ggst, .nidhogg, .ki, .llb, .arms, .bbcf) .x-handle {
+  .right-player-details:is(.ggst, .nidhogg, .ki, .llb, .arms, .bbcf, .avatar, .sf6, .tokon, .samsho) .x-handle {
     grid-column: span 2;
     padding: 4px 8px;
+  }
+
+  .left-player-details.tokon {
+		top: 115px;
+		left: 250px;
+  }
+
+  .right-player-details.tokon {
+		top: 115px;
+		right: 180px;
   }
 
   .left-player-details .seed,
@@ -383,11 +402,19 @@
     font-size: 25px;
   }
 
+  .scoreboard.tokon {
+		font-size: 22px;
+  }
+
   .scoreboard.bbcf .tournament-round,
   .scoreboard.gbvs .tournament-round,
   .scoreboard.xxko .tournament-round {
     height: 38px;
   }
+  .scoreboard.tokon .tournament-round {
+		height: 34px;
+  }
+
   .scoreboard .tournament-round {
     font-size: 20px;
     color: #280137;
@@ -397,6 +424,7 @@
   }
   .scoreboard.bbcf .tournament-round p,
   .scoreboard.xxko .tournament-round p,
+  .scoreboard.tokon .tournament-round p,
   .scoreboard.gbvs .tournament-round p {
     margin-top: 5px;
   }
@@ -407,6 +435,11 @@
 
   .scoreboard.vf5 .tournament-round {
     margin-top: 150px;
+  }
+
+  .right-player-details.samsho,
+  .left-player-details.samsho {
+		top: 130px;
   }
 
   .scoreboard.arms .tournament-round {
@@ -527,6 +560,7 @@
     margin-right: -110px;
   }
   .right-player.xxko .player-info .player-inner,
+	.right-player.samsho .player-info .player-inner,
   .right-player.dbfz .player-info .player-inner {
     margin-right: -70px;
   }
@@ -593,6 +627,9 @@
   }
   .left-player.cotw .player-info {
     margin-right: 150px;
+  }
+  .left-player.tokon {
+		margin-left: 320px;
   }
   .right-player.cotw .player-info {
     margin-left: 150px;
@@ -665,6 +702,26 @@
   .left-player.gbvs .player-info {
     margin-right: 215px;
   }
+  .left-player.avatar {
+		margin-left: 110px;
+  }
+  .right-player.avatar .score {
+		margin-right: 100px;
+		padding-right: 45px;
+		padding-left: 45px;
+  }
+  .left-player.avatar .score,
+  .left-player.tokon .score {
+		padding-right: 45px;
+		padding-left: 45px;
+  }
+
+  .right-player.tokon .score {
+		margin-right: 260px;
+		padding-right: 45px;
+		padding-left: 45px;
+  }
+
 
   .right-player.gbvs .score {
     margin-right: 200px;

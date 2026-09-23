@@ -80,7 +80,23 @@ export const games: readonly GameData[] = Object.freeze([
     name: "2XKO",
     width: 640,
     data: "xxko"
-  }
+	},
+	{
+		name: "Avatar",
+		width: 640,
+		data: "avatar"
+	},
+	{
+		name: "Marvel Tokon",
+		width: 640,
+		data: "tokon"
+	},
+	{
+		name: "Samurai Shodown",
+		width: 640,
+		data: "samsho"
+	}
+
 ]);
 
 export const header = Object.freeze({
